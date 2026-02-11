@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+/* ─── Avenir Font Faces ─────────────────────────────────────────── */
+@font-face {
+  font-family: "Avenir";
+  src: url("/fonts/avenir-heavy.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Avenir";
+  src: url("/fonts/avenir-medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Avenir";
+  src: url("/fonts/avenir-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Avenir";
+  src: url("/fonts/avenir-light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AvenirNext";
+  src: url("/fonts/avenir-next-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/DMSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/DMSans-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── CSS Variables ────────────────────────────────────────────── */
+:root {
+  --color-navy: #1b2a4a;
+  --color-gold: #f5c518;
+  --color-cream: #f5f0e8;
+  --color-blue-cta: #2e6fd4;
+  --color-gray-light: #e0e0e0;
+  --color-gray-text: #6b7280;
+}
+
+/* ─── Base Reset ───────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "AvenirNext", "Avenir", system-ui, sans-serif;
+  font-weight: 400;
+  background-color: white;
+  color: var(--color-navy);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Typography Helpers ───────────────────────────────────────── */
+.font-avenir-heavy {
+  font-family: "Avenir", sans-serif;
+  font-weight: 800;
+}
+.font-avenir-medium {
+  font-family: "Avenir", sans-serif;
+  font-weight: 500;
+}
+.font-avenir-regular {
+  font-family: "AvenirNext", "Avenir", sans-serif;
+  font-weight: 400;
+}
+.font-avenir-light {
+  font-family: "Avenir", sans-serif;
+  font-weight: 300;
+}
+
+.font-dm-regular {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 400;
+}
+
+.font-dm-thin {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 100;
+}
+
+/* ─── Scrollbar hide ───────────────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
