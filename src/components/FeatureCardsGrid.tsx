@@ -98,7 +98,7 @@ export default function FeatureCardsGrid() {
           <>
             <motion.div
               key="overlay"
-              className="fixed inset-0 z-[60]"
+              className="fixed inset-0 z-60"
               style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -109,7 +109,7 @@ export default function FeatureCardsGrid() {
 
             <motion.div
               key="modal"
-              className="fixed z-[70] rounded-2xl p-7 shadow-2xl"
+              className="fixed z-70 rounded-2xl p-7 shadow-2xl"
               style={{
                 background: '#0d1a2c',
                 left: '20px',
