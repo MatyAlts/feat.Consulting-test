@@ -62,7 +62,7 @@ export default function ReviewsCarousel() {
 
   // Close expanded card when moving to a different slide
   useEffect(() => {
-    setExpanded(null)
+    requestAnimationFrame(() => setExpanded(null))
   }, [current])
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {

@@ -7,7 +7,7 @@ const CARDS = [
     title: 'You see how investment decisions are formed',
     subtitle: '(not just chosen)',
     preview: "You'll recognize how real decisions come together: ho...",
-    body: "You'll recognize how real decisions come together: how seasoned investors frame uncertainty, debate tradeoffs, and commit capital under pressure. You\'re not watching from outside the room — you\'re in it.",
+    body: "You'll recognize how real decisions come together: how seasoned investors frame uncertainty, debate tradeoffs, and commit capital under pressure. You're not watching from outside the room — you're in it.",
   },
   {
     image: '/assets_mobile/investor_card_2.png',
@@ -21,7 +21,7 @@ const CARDS = [
     title: 'You become an investor.',
     subtitle: "You don't just learn investing.",
     preview: "Not by watching, but by deciding. You'll commit when it...",
-    body: "By the end, you\'ve co-invested in a real startup alongside your cohort. An actual commitment, with real capital. Not a case study. Not a mock deal. A decision you made and own.",
+    body: "By the end, you've co-invested in a real startup alongside your cohort. An actual commitment, with real capital. Not a case study. Not a mock deal. A decision you made and own.",
   },
 ]
 

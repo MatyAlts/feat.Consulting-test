@@ -24,7 +24,9 @@ export default function App() {
 
   // Once it enters view, keep it activated
   useEffect(() => {
-    if (inView && !activated) setActivated(true)
+    if (inView && !activated) {
+      requestAnimationFrame(() => setActivated(true))
+    }
   }, [inView, activated])
 
   return (
