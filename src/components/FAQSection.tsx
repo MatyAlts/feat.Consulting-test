@@ -157,7 +157,11 @@ function FAQItem({ item, delay = 0 }: { item: { q: string; a: string }; delay?: 
   )
 }
 
-export default function FAQSection() {
+interface FAQProps {
+  seeMoreRef?: React.RefObject<HTMLDivElement | null>;
+}
+
+export default function FAQSection({ seeMoreRef }: FAQProps) {
   const [showMore, setShowMore] = useState(false)
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
@@ -212,28 +216,30 @@ export default function FAQSection() {
           )}
         </AnimatePresence>
 
-        {!showMore && (
-          <motion.button
-            className="font-avenir-regular w-full mt-[6px] py-2 flex items-center justify-center gap-2 transition-opacity hover:opacity-70"
-            style={{ 
-              color: '#9096b5',
-              fontSize: '15px'
-            }}
-            onClick={() => setShowMore(true)}
-            aria-label="See more FAQ questions"
-          >
-            See more
-            <svg 
-              width="14" 
-              height="8" 
-              viewBox="0 0 14 8" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
+        <div ref={seeMoreRef}>
+          {!showMore && (
+            <motion.button
+              className="font-avenir-regular w-full mt-[6px] py-2 flex items-center justify-center gap-2 transition-opacity hover:opacity-70"
+              style={{ 
+                color: '#9096b5',
+                fontSize: '15px'
+              }}
+              onClick={() => setShowMore(true)}
+              aria-label="See more FAQ questions"
             >
-              <path d="M1 1L7 7L13 1" stroke="#9096b5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </motion.button>
-        )}
+              See more
+              <svg 
+                width="14" 
+                height="8" 
+                viewBox="0 0 14 8" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M1 1L7 7L13 1" stroke="#9096b5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </motion.button>
+          )}
+        </div>
       </div>
     </section>
   )

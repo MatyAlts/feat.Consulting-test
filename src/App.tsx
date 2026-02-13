@@ -22,6 +22,9 @@ export default function App() {
   const activationRef = useRef<HTMLDivElement>(null)
   const inView = useInView(activationRef, { margin: '0px 0px -100px 0px' })
 
+  const seeMoreRef = useRef<HTMLDivElement>(null)
+  const isAtSeeMore = useInView(seeMoreRef, { margin: '0px 0px -50px 0px' })
+
   // Once it enters view, keep it activated
   useEffect(() => {
     if (inView && !activated) {
@@ -69,13 +72,13 @@ export default function App() {
         <DarkZone />
 
         {/* S15 — FAQ */}
-        <FAQSection />
+        <FAQSection seeMoreRef={seeMoreRef} />
 
         {/* S16 — Ready for the Next Step */}
         <ReadyNextStep />
 
         {/* Sticky countdown — now sitting before official footer */}
-        <StickyCountdownFooter activated={activated} />
+        <StickyCountdownFooter activated={activated} isAtSeeMore={isAtSeeMore} />
 
         {/* S17 — Footer */}
         <Footer />

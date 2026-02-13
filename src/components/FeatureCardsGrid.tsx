@@ -54,18 +54,21 @@ export default function FeatureCardsGrid() {
   useOutsideClick(ref, () => setActive(null));
 
   return (
-    <section ref={sectionRef} className="px-5 pb-0 pt-[30px]" style={{ background: '#f4f7ec' }}>
+    <section ref={sectionRef} className="relative px-5 pb-0 pt-[30px]" style={{ background: '#f4f8ed' }}>
       <AnimatePresence>
         {active && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm h-full w-full z-100"
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm h-full w-full z-100"
             onClick={() => setActive(null)}
           />
         )}
       </AnimatePresence>
+
+      {/* Expanded card with glow wrapper */}
       <AnimatePresence>
         {active ? (
           <div className="fixed inset-0 grid place-items-center z-110 px-4">
@@ -73,8 +76,28 @@ export default function FeatureCardsGrid() {
               layoutId={`card-${active.title}-${id}`}
               ref={ref}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="w-full max-w-[420px] h-fit max-h-[90vh] flex flex-col bg-[#0d1a2c] rounded-[28px] overflow-hidden shadow-2xl relative"
+              className="w-full max-w-[420px] h-fit max-h-[90vh] flex flex-col bg-[#0d1a2c] rounded-[28px] overflow-visible relative"
             >
+              {/* Tight, high-end glow halo */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 z-[-1] pointer-events-none"
+                style={{
+                  borderRadius: 28,
+                  // Concentric white glows for a natural "light" effect
+                  boxShadow: `
+                    0 0 15px rgba(255,255,255,0.25),
+                    0 0 30px rgba(255,255,255,0.15),
+                    0 0 50px rgba(255,255,255,0.08),
+                    inset 0 0 10px rgba(255,255,255,0.05)
+                  `,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                }}
+              />
+
               <div className="p-8 pb-10">
                 <motion.div 
                   layoutId={`emoji-${active.title}-${id}`}

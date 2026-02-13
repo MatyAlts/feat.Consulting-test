@@ -146,62 +146,50 @@ const PlaysOutCard = forwardRef<HTMLDivElement, {
   index: number
   totalCards: number
   onTap: () => void 
-}>(({ card, index, totalCards, onTap }, ref) => {
+}>(({ card, index, totalCards: _totalCards, onTap }, ref) => {
   // Increased offset to 110px to account for more top padding on title
   const titleOffset = 110
   const stickyTop = titleOffset + index * STACK_OFFSET
   const innerRef = useRef<HTMLDivElement>(null)
-  const [blur, setBlur] = useState(0)
-  const [dimming, setDimming] = useState(0)
+  const [shadowIntensity, setShadowIntensity] = useState(0)
 
-  // Track scroll to apply blur when card is being covered by the next one
+  // Track scroll to apply upward shadow when this card is stuck and covering content
   const handleScroll = useCallback(() => {
-    // Last card never blurs
-    if (!innerRef.current || index >= totalCards - 1) {
-      setBlur(0)
-      setDimming(0)
+    // First card never casts a shadow upward (nothing beneath it)
+    if (!innerRef.current || index === 0) {
+      setShadowIntensity(0)
       return
     }
 
-    // The sticky wrapper is the parent of innerRef
     const stickyDiv = innerRef.current.parentElement
     if (!stickyDiv) return
 
     const myRect = stickyDiv.getBoundingClientRect()
 
-    // Only apply blur when the card is CURRENTLY STUCK
-    // When stuck, top ≈ stickyTop (within a small tolerance)
-    // When scrolled past the section, top will be far from stickyTop
-    if (Math.abs(myRect.top - stickyTop) > 15) {
-      setBlur(0)
-      setDimming(0)
-      return
+    // When the card is stuck, its top will be at or near its stickyTop value
+    // The closer it is to stickyTop, the more it's covering the card below
+    const distanceFromStuck = myRect.top - stickyTop
+
+    if (distanceFromStuck <= 0) {
+      // Fully stuck — maximum shadow
+      setShadowIntensity(1)
+    } else if (distanceFromStuck < 120) {
+      // Approaching stuck position — gradual shadow
+      setShadowIntensity(1 - distanceFromStuck / 120)
+    } else {
+      setShadowIntensity(0)
     }
-
-    // Find the next sibling card (next sticky div)
-    const nextCard = stickyDiv.nextElementSibling as HTMLElement
-    if (!nextCard) {
-      setBlur(0)
-      setDimming(0)
-      return
-    }
-
-    const nextRect = nextCard.getBoundingClientRect()
-
-    // How much overlap: current card bottom minus next card top
-    const overlap = Math.max(0, myRect.bottom - nextRect.top)
-    // Max possible overlap is the full card height minus the peek offset
-    const maxOverlap = myRect.height - STACK_OFFSET
-    const coverageRatio = Math.min(1, overlap / maxOverlap)
-
-    setBlur(coverageRatio * 3) // max 3px blur
-    setDimming(coverageRatio * 0.15) // max 15% dimming
-  }, [stickyTop, index, totalCards])
+  }, [index, stickyTop])
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
+
+  // Upward shadow: projects upward (-y) with increasing intensity
+  const upwardShadow = shadowIntensity > 0.05
+    ? `0px -${4 + shadowIntensity * 12}px ${12 + shadowIntensity * 20}px rgba(0,0,0,${0.08 + shadowIntensity * 0.14})`
+    : 'none'
 
   return (
     <div
@@ -219,22 +207,10 @@ const PlaysOutCard = forwardRef<HTMLDivElement, {
         onClick={onTap}
         style={{
           borderRadius: 16,
-          filter: blur > 0.1 ? `blur(${blur}px)` : 'none',
-          transition: 'filter 0.15s ease-out',
+          boxShadow: upwardShadow,
+          transition: 'box-shadow 0.2s ease-out',
         }}
       >
-        {/* Dimming overlay */}
-        {dimming > 0.01 && (
-          <div 
-            className="absolute inset-0 rounded-2xl pointer-events-none"
-            style={{ 
-              background: `rgba(0,0,0,${dimming})`,
-              zIndex: 20,
-              transition: 'background 0.15s ease-out',
-            }}
-          />
-        )}
-
         {/* Image Container */}
         <div className="w-full h-[206px] relative z-0">
           <img

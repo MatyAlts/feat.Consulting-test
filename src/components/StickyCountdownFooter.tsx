@@ -1,5 +1,5 @@
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { useRef } from 'react'
 import { useCountdown } from '../hooks/useCountdown'
 import { useScrollDirection } from '../hooks/useScrollDirection'
 
@@ -121,59 +121,45 @@ function CountdownInner() {
 
 interface Props {
   activated: boolean
+  isAtSeeMore: boolean
 }
 
-export default function StickyCountdownFooter({ activated }: Props) {
-  const homeRef = useRef<HTMLDivElement>(null)
-  const isAtHome = useInView(homeRef, { margin: '0px 0px -150px 0px' })
+export default function StickyCountdownFooter({ activated, isAtSeeMore }: Props) {
   const scrollDirection = useScrollDirection()
+  const [hasReachedFaq, setHasReachedFaq] = useState(false)
 
-  const isVisible = activated && (scrollDirection !== 'up' || isAtHome)
+  // When we reach "See more", suppress the sticky bar
+  useEffect(() => {
+    if (isAtSeeMore) {
+      setHasReachedFaq(true)
+    }
+  }, [isAtSeeMore])
+
+  // If scrolling up AND we're far enough from the "See more" area, reset the suppression
+  useEffect(() => {
+    // Reset only when scrolling up AND we are definitely out of the trigger zone
+    if (scrollDirection === 'up' && !isAtSeeMore) {
+      setHasReachedFaq(false)
+    }
+  }, [scrollDirection, isAtSeeMore])
+
+  // Pure floating logic
+  const isVisible = activated && !hasReachedFaq && scrollDirection === 'down'
 
   return (
-    <>
-      {/* 
-        The "Parking" container. 
-        We set the background to bridge the gap between ReadyNextStep (#f2f2f2) and Footer (#060621).
-      */}
-      <div 
-        ref={homeRef} 
-        className="w-full relative overflow-hidden" 
-        style={{ 
-          height: activated ? 'auto' : 0,
-          background: activated ? '#060621' : 'transparent', // Match footer blue to hide white lines
-          marginTop: activated ? '-1px' : 0 // Overlap slightly with previous section
-        }}
-      >
-        {activated && (
-          <div style={{ background: '#f2f2f2' }}> {/* Top half matches ReadyNextStep */}
-             <motion.div 
-               className="w-full"
-               initial={{ opacity: 0 }}
-               animate={{ opacity: isAtHome ? 1 : 0 }}
-               transition={{ duration: 0.3 }}
-             >
-               <CountdownInner />
-             </motion.div>
-          </div>
-        )}
-      </div>
-
-      {/* Floating overlay */}
-      <AnimatePresence>
-        {isVisible && !isAtHome && (
-          <motion.div
-            key="sticky-countdown-overlay"
-            className="fixed bottom-0 left-0 right-0 z-50 flex flex-col items-center pb-0 pointer-events-none"
-            initial={{ y: 200, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 200, opacity: 0 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-          >
-            <CountdownInner />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          key="sticky-countdown-overlay"
+          className="fixed bottom-0 left-0 right-0 z-50 flex flex-col items-center pb-0 pointer-events-none"
+          initial={{ y: 200, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 200, opacity: 0 }}
+          transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+        >
+          <CountdownInner />
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
