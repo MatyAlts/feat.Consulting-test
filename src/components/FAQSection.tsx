@@ -85,40 +85,54 @@ function FAQItem({ item, delay = 0 }: { item: { q: string; a: string }; delay?: 
   return (
     <motion.div
       layout
-      className="bg-white rounded-2xl border border-gray-100 overflow-hidden mb-3"
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay }}
+      onClick={() => setOpen(!open)}
+      className="rounded-[20px] overflow-hidden border-2 cursor-pointer shadow-[0px_4px_20px_rgba(0,0,0,0.08)]"
+      initial={{ opacity: 0, y: 8, backgroundColor: '#ffffff', borderColor: '#E5E7EB' }}
+      animate={{ 
+        opacity: 1, 
+        y: 0,
+        backgroundColor: open ? '#0d1a2c' : '#ffffff',
+        borderColor: open ? 'transparent' : '#E5E7EB'
+      }}
+      transition={{ 
+        backgroundColor: { duration: 0.3 },
+        borderColor: { duration: 0.3 },
+        opacity: { duration: 0.35, delay },
+        y: { duration: 0.35, delay }
+      }}
     >
-      <button
-        className="w-full flex items-center justify-between p-5 text-left gap-4"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-      >
-        <span 
-          className="font-avenir-regular text-[15px] leading-tight flex-1" 
-          style={{ color: '#0d1a2c', fontFamily: 'AvenirNext' }}
+      <div className="w-full flex items-center justify-between p-5 text-left gap-4">
+        <motion.span 
+          animate={{ color: open ? '#ffffff' : '#0d1a2c' }}
+          className="font-avenir-regular text-[15.5px] leading-tight flex-1" 
+          style={{ fontFamily: 'AvenirNext' }}
         >
           {item.q}
-        </span>
-        <div
-          className="flex items-center justify-center rounded-lg font-avenir-heavy text-xl shrink-0"
+        </motion.span>
+        
+        {/* Leaf-shaped Toggle Button */}
+        <motion.div
+          className="flex items-center justify-center shrink-0"
+          animate={{ 
+            backgroundColor: open ? 'transparent' : '#0d1a2c',
+            borderRadius: '12px 4px 12px 4px'
+          }}
           style={{
-            width: 34,
-            height: 34,
-            background: '#0d1a2c',
+            width: 32,
+            height: 32,
             color: '#fbd979',
           }}
           aria-hidden="true"
         >
           <motion.span
+            className="text-xl font-avenir-heavy leading-none"
             animate={{ rotate: open ? 45 : 0 }}
             transition={{ duration: 0.25 }}
           >
             +
           </motion.span>
-        </div>
-      </button>
+        </motion.div>
+      </div>
 
       <AnimatePresence initial={false}>
         {open && (
@@ -127,12 +141,12 @@ function FAQItem({ item, delay = 0 }: { item: { q: string; a: string }; delay?: 
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
             className="overflow-hidden"
           >
             <p 
-              className="font-avenir-regular text-sm leading-relaxed px-5 pb-5" 
-              style={{ color: '#4b5563', fontFamily: 'AvenirNext' }}
+              className="font-avenir-regular text-[13.5px] leading-relaxed px-5 pb-6 text-white/80" 
+              style={{ fontFamily: 'AvenirNext' }}
             >
               {item.a}
             </p>
@@ -151,11 +165,11 @@ export default function FAQSection() {
   return (
     <section
       ref={ref}
-      className="px-4 pt-4 pb-12"
-      style={{ background: '#f2f2f2', paddingBottom: 100 }}
+      className="px-4 pt-[50px] pb-0"
+      style={{ background: '#EAEAEA99', paddingBottom: 0 }}
     >
       <motion.h2
-        className="font-avenir-heavy text-center leading-none mb-3 pt-4"
+        className="font-avenir-heavy text-center leading-none mb-3"
         style={{ fontSize: '2rem', color: '#060621' }}
         initial={{ opacity: 0, y: 14 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -167,7 +181,7 @@ export default function FAQSection() {
       </motion.h2>
 
       <motion.p
-        className="font-avenir-regular text-[14px] text-center mb-8"
+        className="font-avenir-regular text-[14px] text-center mb-[18px]"
         style={{ color: '#202020', fontFamily: 'AvenirNext' }}
         initial={{ opacity: 0, y: 8 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -176,7 +190,7 @@ export default function FAQSection() {
         Common questions, answered clearly.
       </motion.p>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-3">
         {FAQ_INITIAL.map((item, i) => (
           <FAQItem key={i} item={item} delay={inView ? i * 0.04 : 0} />
         ))}
@@ -185,7 +199,7 @@ export default function FAQSection() {
           {showMore && (
             <motion.div
               key="more"
-              className="flex flex-col"
+              className="flex flex-col gap-3"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -200,7 +214,7 @@ export default function FAQSection() {
 
         {!showMore && (
           <motion.button
-            className="font-avenir-regular w-full mt-6 py-2 flex items-center justify-center gap-2 transition-opacity hover:opacity-70"
+            className="font-avenir-regular w-full mt-[6px] py-2 flex items-center justify-center gap-2 transition-opacity hover:opacity-70"
             style={{ 
               color: '#9096b5',
               fontSize: '15px'

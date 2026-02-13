@@ -4,14 +4,16 @@ import { useRef } from 'react'
 
 export default function ShiftInFocus() {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const phraseRef = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
+  const phraseInView = useInView(phraseRef, { once: true, margin: '-180px' })
 
   return (
     <section
       ref={ref}
       className="flex flex-col items-center px-6 py-10 text-white"
       style={{
-        background: 'linear-gradient(to bottom, transparent 55%, #ede8dd 100%), radial-gradient(ellipse at 50% 45%, #4a1878 0%, #210836 60%)',
+        background: 'linear-gradient(to bottom, transparent 55%, #EEE9DE 100%), radial-gradient(ellipse at 50% 45%, #4a1878 0%, #210836 60%)',
         borderTopLeftRadius: 28,
         borderTopRightRadius: 28,
         paddingBottom: 80,
@@ -51,16 +53,30 @@ export default function ShiftInFocus() {
       />
 
       {/* Body — Avenir Next, "deciding better." bold */}
-      <motion.p
-        className="font-avenir-regular text-white text-center text-base leading-relaxed"
-        style={{ maxWidth: 300, opacity: 0.95 }}
-        initial={{ opacity: 0, y: 12 }}
-        animate={inView ? { opacity: 0.95, y: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.3 }}
+      <div 
+        ref={phraseRef}
+        className="flex flex-wrap justify-center gap-x-[0.35em] w-full max-w-[300px]"
       >
-        It&apos;s about{' '}
-        <strong className="font-avenir-heavy text-white">deciding better.</strong>
-      </motion.p>
+        {["It's", "about", "deciding", "better."].map((word, i) => (
+          <motion.span
+            key={i}
+            className={`font-avenir-regular text-white text-base leading-relaxed`}
+            style={i >= 2 ? { 
+              textShadow: '0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(183,169,255,0.5)',
+              filter: 'brightness(1.5)'
+            } : {}}
+            initial={{ opacity: 0, y: 12, filter: 'blur(8px)' }}
+            animate={phraseInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 12, filter: 'blur(8px)' }}
+            transition={{ 
+              duration: 0.8, 
+              delay: 0.1 + (i * 0.15),
+              ease: [0.4, 0, 0.2, 1] 
+            }}
+          >
+            {word}
+          </motion.span>
+        ))}
+      </div>
     </section>
   )
 }

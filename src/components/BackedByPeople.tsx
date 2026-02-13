@@ -8,11 +8,11 @@ export default function BackedByPeople() {
   return (
     <section
       ref={ref}
-      className="px-6 pt-4 pb-12 text-center"
+      className="relative px-6 pt-2 pb-4 text-center"
       style={{ background: '#F5F0E8' }}
     >
       <motion.h2
-        className="font-avenir-heavy leading-tight mb-3 text-center"
+        className="font-avenir-heavy leading-tight mb-[2px] text-center"
         style={{ fontSize: '1.75rem', color: '#060621' }}
         initial={{ opacity: 0, y: 14 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}

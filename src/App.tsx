@@ -1,3 +1,5 @@
+import { useState, useRef, useEffect } from 'react'
+import { useInView } from 'framer-motion'
 import './index.css'
 import Hero from './components/Hero'
 import ShiftInFocus from './components/ShiftInFocus'
@@ -10,17 +12,24 @@ import ProgramBuiltOnExperience from './components/ProgramBuiltOnExperience'
 import BackedByPeople from './components/BackedByPeople'
 import ReviewsCarousel from './components/ReviewsCarousel'
 import TrustedByLogos from './components/TrustedByLogos'
-import BecomeInvestor from './components/BecomeInvestor'
-import InvestorCardStack from './components/InvestorCardStack'
-import FindYourPlace from './components/FindYourPlace'
+import DarkZone from './components/DarkZone'
 import FAQSection from './components/FAQSection'
 import ReadyNextStep from './components/ReadyNextStep'
 import Footer from './components/Footer'
 
 export default function App() {
+  const [activated, setActivated] = useState(false)
+  const activationRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(activationRef, { margin: '0px 0px -100px 0px' })
+
+  // Once it enters view, keep it activated
+  useEffect(() => {
+    if (inView && !activated) setActivated(true)
+  }, [inView, activated])
+
   return (
-    <div className="bg-white overflow-x-hidden">
-      <main className="max-w-[428px] mx-auto bg-white shadow-2xl relative overflow-hidden">
+    <div className="bg-white" style={{ overflowX: 'clip' }}>
+      <main className="max-w-[428px] mx-auto bg-white shadow-2xl relative" style={{ overflowX: 'clip' }}>
         {/* S1 — Hero */}
         <Hero />
 
@@ -33,11 +42,11 @@ export default function App() {
         {/* S4 — Cards "Here's How That Plays Out" (Accordion) */}
         <PlaysOutCards />
 
-        {/* Sticky countdown — trigger after S4 */}
-        <StickyCountdownFooter />
-
         {/* S6 — Welcome to Learning by Doing */}
         <LearningByDoing />
+
+        {/* Activation Point for Sticky Footer - Absolute to avoid white line */}
+        <div ref={activationRef} className="absolute h-0 w-0 pointer-events-none" />
 
         {/* S7 — Feature Cards Grid (Modal) */}
         <FeatureCardsGrid />
@@ -54,20 +63,17 @@ export default function App() {
         {/* S11 — Trusted By */}
         <TrustedByLogos />
 
-        {/* S12 — Become the Investor */}
-        <BecomeInvestor />
-
-        {/* S13 — Card Stack */}
-        <InvestorCardStack />
-
-        {/* S14 — Find Your Place */}
-        <FindYourPlace />
+        {/* S12-14 — Dark Zone (Become + Cards + CTA) */}
+        <DarkZone />
 
         {/* S15 — FAQ */}
         <FAQSection />
 
         {/* S16 — Ready for the Next Step */}
         <ReadyNextStep />
+
+        {/* Sticky countdown — now sitting before official footer */}
+        <StickyCountdownFooter activated={activated} />
 
         {/* S17 — Footer */}
         <Footer />

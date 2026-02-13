@@ -8,7 +8,7 @@ export default function ReadyNextStep() {
   return (
     <section
       ref={ref}
-      className="flex flex-col items-center px-4 pt-12 pb-20"
+      className="flex flex-col items-center px-4 pt-[69px] pb-20"
       style={{ background: '#f2f2f2' }}
     >
       {/* Zoom Image Section */}
@@ -84,7 +84,7 @@ export default function ReadyNextStep() {
           aria-label="Start a Conversation"
         >
           <span className="mr-2">Start a Conversation</span>
-          <img src="/assets_mobile/flecha.svg" alt="" className="w-[11px] h-[11px] invert brightness-200" />
+          <img src="/assets_mobile/flecha.svg" alt="" className="w-[8.5px] h-[8.5px] invert brightness-200" />
         </motion.a>
       </motion.div>
     </section>

@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useState, useRef, useEffect, forwardRef, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const CARDS = [
   {
@@ -28,119 +28,374 @@ const CARDS = [
   },
 ]
 
-function PlusIcon({ open }: { open: boolean }) {
-  return (
-    <motion.div
-      className="flex items-center justify-center rounded-full font-avenir-heavy text-xl"
-      style={{
-        width: 36,
-        height: 36,
-        background: '#F5C518',
-        color: '#1B2A4A',
-        flexShrink: 0,
-      }}
-      animate={{ rotate: open ? 45 : 0 }}
-      transition={{ duration: 0.3 }}
-      aria-hidden="true"
-    >
-      +
-    </motion.div>
-  )
-}
+const STACK_OFFSET = 16
 
-function PlaysOutCard({ card, index }: { card: typeof CARDS[0]; index: number }) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
+/* ── Bottom Sheet ── */
+function BottomSheet({ 
+  card, 
+  onClose 
+}: { 
+  card: typeof CARDS[0]
+  onClose: () => void 
+}) {
+  const sheetRef = useRef<HTMLDivElement>(null)
 
   return (
-    <motion.div
-      ref={ref}
-      layout
-      className="relative overflow-hidden rounded-2xl shadow-md"
-      style={{ background: '#1B2A4A' }}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-    >
-      {/* Image */}
-      <div className="relative" style={{ height: 220 }}>
-        <img
-          src={card.image}
-          alt={card.title}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
+    <>
+      {/* Backdrop overlay with blur */}
+      <motion.div
+        key="sheet-backdrop"
+        className="fixed inset-0 z-100"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: 1, 
+          backgroundColor: 'rgba(0,0,0,0.35)',
+        }}
+        exit={{ 
+          opacity: 0, 
+          backgroundColor: 'rgba(0,0,0,0)',
+        }}
+        transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+        onClick={onClose}
+        style={{ 
+          backdropFilter: 'blur(12px)', 
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      />
+
+      {/* Sheet */}
+      <motion.div
+        key="sheet-panel"
+        ref={sheetRef}
+        className="fixed bottom-0 left-0 right-0 z-101 max-w-[428px] mx-auto"
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
+        transition={{ 
+          duration: 0.35,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={{ top: 0, bottom: 0.6 }}
+        onDragEnd={(_, info) => {
+          if (info.offset.y > 100 || info.velocity.y > 500) {
+            onClose()
+          }
+        }}
+      >
         <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(to bottom, rgba(27,42,74,0.1) 0%, rgba(27,42,74,0.75) 100%)' }}
-        />
-        {/* Title overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 flex items-end justify-between">
-          <div className="flex-1 pr-3">
-            <h3 className="font-avenir-heavy text-white text-lg leading-snug mb-1">
+          className="rounded-t-[24px] overflow-hidden"
+          style={{
+            background: '#0B2232',
+            boxShadow: '0 -10px 40px rgba(0,0,0,0.3)',
+            maxHeight: '85vh',
+          }}
+        >
+          {/* Drag handle */}
+          <div className="flex justify-center pt-3 pb-2">
+            <div 
+              className="w-10 h-1 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.3)' }}
+            />
+          </div>
+
+          {/* Image */}
+          <div className="w-full h-[200px] px-4">
+            <img
+              src={card.image}
+              alt={card.title}
+              className="w-full h-full object-cover rounded-xl"
+            />
+          </div>
+
+          {/* Content */}
+          <div className="px-6 pt-5 pb-8 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 260px)' }}>
+            <h3 className="text-white text-2xl font-medium font-['Avenir'] leading-8 mb-2">
               {card.title}
             </h3>
-            <p className="font-avenir-regular text-sm" style={{ color: 'rgba(255,255,255,0.85)' }}>
+            <p className="opacity-60 text-neutral-50 text-sm font-medium font-['Avenir'] leading-tight mb-5">
               {card.subtitle}
             </p>
-          </div>
-          <button
-            onClick={() => setOpen(!open)}
-            aria-label={open ? `Collapse ${card.title}` : `Expand ${card.title}`}
-            className="shrink-0"
-          >
-            <PlusIcon open={open} />
-          </button>
-        </div>
-      </div>
 
-      {/* Expandable body */}
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="body"
-            layout
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className="overflow-hidden"
-          >
-            <div className="px-4 pb-5 pt-3">
-              {card.body.split('\n\n').map((para, i) => (
-                <p key={i} className="font-avenir-regular text-sm leading-relaxed mb-3 last:mb-0"
-                  style={{ color: 'rgba(255,255,255,0.88)' }}>
-                  {para}
-                </p>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+            {/* Divider */}
+            <div 
+              className="w-full h-px mb-5" 
+              style={{ background: 'rgba(255,255,255,0.1)' }} 
+            />
+
+            {/* Body paragraphs */}
+            {card.body.split('\n\n').map((para, i) => (
+              <p 
+                key={i} 
+                className="font-['Avenir'] text-neutral-50/80 text-[15px] leading-relaxed mb-4 last:mb-0"
+              >
+                {para}
+              </p>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </>
   )
 }
 
-export default function PlaysOutCards() {
-  return (
-    <section className="px-4 relative" style={{ background: '#ede8dd' }}>
-      <div className="flex flex-col gap-4">
-        {CARDS.map((card, i) => (
-          <PlaysOutCard key={i} card={card} index={i} />
-        ))}
-      </div>
+/* ── Card ── */
+const PlaysOutCard = forwardRef<HTMLDivElement, { 
+  card: typeof CARDS[0]
+  index: number
+  totalCards: number
+  onTap: () => void 
+}>(({ card, index, totalCards, onTap }, ref) => {
+  // Increased offset to 110px to account for more top padding on title
+  const titleOffset = 110
+  const stickyTop = titleOffset + index * STACK_OFFSET
+  const innerRef = useRef<HTMLDivElement>(null)
+  const [blur, setBlur] = useState(0)
+  const [dimming, setDimming] = useState(0)
 
-      {/* Fluid Gradient Transition to #f4f7ec */}
-      <div 
-        className="h-24 -mx-4" 
-        style={{ 
-          background: 'linear-gradient(to bottom, #ede8dd 0%, #f4f7ec 100%)',
-          width: 'calc(100% + 32px)',
-          marginBottom: '-1px',
-          position: 'relative'
-        }} 
-      />
-    </section>
+  // Track scroll to apply blur when card is being covered by the next one
+  const handleScroll = useCallback(() => {
+    // Last card never blurs
+    if (!innerRef.current || index >= totalCards - 1) {
+      setBlur(0)
+      setDimming(0)
+      return
+    }
+
+    // The sticky wrapper is the parent of innerRef
+    const stickyDiv = innerRef.current.parentElement
+    if (!stickyDiv) return
+
+    const myRect = stickyDiv.getBoundingClientRect()
+
+    // Only apply blur when the card is CURRENTLY STUCK
+    // When stuck, top ≈ stickyTop (within a small tolerance)
+    // When scrolled past the section, top will be far from stickyTop
+    if (Math.abs(myRect.top - stickyTop) > 15) {
+      setBlur(0)
+      setDimming(0)
+      return
+    }
+
+    // Find the next sibling card (next sticky div)
+    const nextCard = stickyDiv.nextElementSibling as HTMLElement
+    if (!nextCard) {
+      setBlur(0)
+      setDimming(0)
+      return
+    }
+
+    const nextRect = nextCard.getBoundingClientRect()
+
+    // How much overlap: current card bottom minus next card top
+    const overlap = Math.max(0, myRect.bottom - nextRect.top)
+    // Max possible overlap is the full card height minus the peek offset
+    const maxOverlap = myRect.height - STACK_OFFSET
+    const coverageRatio = Math.min(1, overlap / maxOverlap)
+
+    setBlur(coverageRatio * 3) // max 3px blur
+    setDimming(coverageRatio * 0.15) // max 15% dimming
+  }, [stickyTop, index, totalCards])
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [handleScroll])
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: 'sticky',
+        top: stickyTop,
+        zIndex: 20 + index, // Higher z-index than title (10)
+        paddingBottom: 48,
+      }}
+    >
+      <div
+        ref={innerRef}
+        className="relative w-full max-w-[340px] mx-auto overflow-visible cursor-pointer"
+        onClick={onTap}
+        style={{
+          borderRadius: 16,
+          filter: blur > 0.1 ? `blur(${blur}px)` : 'none',
+          transition: 'filter 0.15s ease-out',
+        }}
+      >
+        {/* Dimming overlay */}
+        {dimming > 0.01 && (
+          <div 
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{ 
+              background: `rgba(0,0,0,${dimming})`,
+              zIndex: 20,
+              transition: 'background 0.15s ease-out',
+            }}
+          />
+        )}
+
+        {/* Image Container */}
+        <div className="w-full h-[206px] relative z-0">
+          <img
+            src={card.image}
+            alt={card.title}
+            className="w-full h-full object-cover rounded-2xl"
+            loading="lazy"
+          />
+        </div>
+
+        {/* Content Box — compact, no accordion */}
+        <div
+          className="relative -mt-[32px] mx-[6.5px] z-10 bg-[#0B2232] rounded-2xl flex flex-col"
+          style={{ boxShadow: '0px 4.15px 20.67px 0px rgba(0,0,0,0.15)' }}
+        >
+          <div className="px-5 py-4 flex flex-col justify-center items-start gap-2">
+            <div className="flex flex-col justify-start items-start gap-[5px] w-full">
+              <h3 className="w-full text-white text-2xl font-medium font-['Avenir'] leading-8">
+                {card.title}
+              </h3>
+              <p className="w-full opacity-60 text-neutral-50 text-sm font-medium font-['Avenir'] leading-tight mt-1">
+                {card.subtitle}
+              </p>
+            </div>
+
+            {/* "Read more" indicator */}
+            <div className="w-full flex justify-end mt-1">
+              <div className="flex items-center gap-1.5">
+                <span className="text-amber-200 text-xs font-['Avenir'] opacity-70">
+                  Read more
+                </span>
+                <span className="text-amber-200 text-sm opacity-70">
+                  →
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+})
+
+/* ── Section ── */
+export default function PlaysOutCards() {
+  const [selectedCard, setSelectedCard] = useState<typeof CARDS[0] | null>(null)
+  const [bgHeight, setBgHeight] = useState(0)
+  const lastCardRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [titleY, setTitleY] = useState(0)
+
+  const updateScrollEffects = () => {
+    // 1. Update Background Height
+    if (lastCardRef.current && containerRef.current) {
+      const card = lastCardRef.current
+      const height = card.offsetTop + (card.offsetHeight / 2)
+      setBgHeight(height)
+    }
+
+    // 2. Push Title Up at the end
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect()
+      const sectionBottom = rect.bottom
+      
+      // We start pushing earlier (account for stack height + title height)
+      // This ensures the title leaves before it overlaps with the rest of the stack
+      const pushThreshold = 460 
+      if (sectionBottom < pushThreshold) {
+        setTitleY(sectionBottom - pushThreshold)
+      } else {
+        setTitleY(0)
+      }
+    }
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(updateScrollEffects, 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('resize', updateScrollEffects)
+    window.addEventListener('scroll', updateScrollEffects, { passive: true })
+    return () => {
+      window.removeEventListener('resize', updateScrollEffects)
+      window.removeEventListener('scroll', updateScrollEffects)
+    }
+  }, [])
+
+  // Lock body scroll when sheet is open
+  useEffect(() => {
+    if (selectedCard) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [selectedCard])
+
+  return (
+    <>
+      <section 
+        ref={containerRef}
+        className="px-4 pt-0 relative" 
+        style={{ background: '#f4f8ed' }}
+      >
+        {/* Dynamic Background Overlay */}
+        <div 
+          className="absolute top-0 left-0 right-0 z-0 pointer-events-none"
+          style={{ 
+            background: '#EEE9DE', 
+            height: bgHeight,
+            transition: 'height 0.3s ease-out'
+          }}
+        />
+
+        {/* Sticky Title - Lower Z-index (10) and dynamic exit */}
+        <motion.div 
+          className="sticky top-0 z-10 text-center pt-12 pb-5"
+          style={{ 
+            background: '#EEE9DE',
+            y: titleY
+          }}
+        >
+          <div className="flex items-center justify-center gap-4 px-4">
+            <div className="flex-1 h-px bg-[#070c17]/10" />
+            <p
+              className="font-avenir-heavy shrink-0"
+              style={{ color: '#070c17', fontSize: 19 }}
+            >
+              Here&apos;s how that plays out:
+            </p>
+            <div className="flex-1 h-px bg-[#070c17]/10" />
+          </div>
+        </motion.div>
+
+        {/* Cards Stack - Siblings of title to ensure clean relative positioning and exit */}
+        {CARDS.map((card, i) => (
+          <PlaysOutCard 
+            key={i}
+            card={card} 
+            index={i}
+            totalCards={CARDS.length}
+            onTap={() => setSelectedCard(card)}
+            ref={i === CARDS.length - 1 ? lastCardRef : null}
+          />
+        ))}
+
+        {/* Increased spacer to provide room for the exit animation */}
+        <div className="relative z-10" style={{ height: 100 }} />
+      </section>
+
+      {/* Bottom Sheet — rendered outside section for proper fixed positioning */}
+      <AnimatePresence>
+        {selectedCard && (
+          <BottomSheet 
+            card={selectedCard} 
+            onClose={() => setSelectedCard(null)} 
+          />
+        )}
+      </AnimatePresence>
+    </>
   )
 }

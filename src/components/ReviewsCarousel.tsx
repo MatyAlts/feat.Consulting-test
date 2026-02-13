@@ -76,7 +76,7 @@ export default function ReviewsCarousel() {
   return (
     <section
       ref={ref}
-      className="pt-4 pb-4"
+      className="pt-0 pb-4"
       style={{ background: 'linear-gradient(to bottom, #F5F0E8 0%, #F5F0E8 50%, #f4f7ec 100%)' }}
     >
       {/* Carousel track */}
@@ -90,11 +90,13 @@ export default function ReviewsCarousel() {
         <motion.div
           className="flex"
           style={{ paddingLeft: CARD_LEFT_PAD }}
-          animate={{ x: -(current * (cardWidth + CARD_GAP)) }}
+          animate={{ 
+            x: -(current * (cardWidth + CARD_GAP)) + (current / (REVIEWS.length - 1)) * (CARD_PEEK - CARD_LEFT_PAD)
+          }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           drag="x"
           dragConstraints={{
-            left: -((REVIEWS.length - 1) * (cardWidth + CARD_GAP)),
+            left: -((REVIEWS.length - 1) * (cardWidth + CARD_GAP)) + (CARD_PEEK - CARD_LEFT_PAD),
             right: 0,
           }}
           onDragEnd={handleDragEnd}
@@ -193,8 +195,8 @@ export default function ReviewsCarousel() {
             style={{
               width: 8,
               height: 8,
-              background: i === current ? '#FBD979' : 'transparent',
-              border: `1.5px solid ${i === current ? '#FBD979' : '#9CA3AF'}`,
+              background: i === current ? '#FBD979' : '#D1D5DB',
+              border: `1px solid ${i === current ? '#FBD979' : '#D1D5DB'}`,
             }}
             aria-label={`Go to review ${i + 1}`}
           />

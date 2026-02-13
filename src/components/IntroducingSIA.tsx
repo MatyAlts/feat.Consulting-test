@@ -10,11 +10,11 @@ export default function IntroducingSIA() {
     <section
       ref={ref}
       className="flex flex-col items-center px-6 text-center"
-      style={{ background: '#ede8dd', paddingTop: 40, paddingBottom: 16 }}
+      style={{ background: '#EEE9DE', paddingTop: 40, paddingBottom: 0 }}
     >
       {/* Label — Avenir Light, #1c0831 */}
       <motion.p
-        className="font-avenir-light mb-4"
+        className="font-avenir-light mb-[3px]"
         style={{ color: '#1c0831', fontSize: 13 }}
         initial={{ opacity: 0, y: 10 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -25,7 +25,7 @@ export default function IntroducingSIA() {
 
       {/* Main heading */}
       <motion.h2
-        className="text-center leading-tight mb-4"
+        className="text-center leading-tight mb-[3px]"
         style={{ maxWidth: 320 }}
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -49,24 +49,13 @@ export default function IntroducingSIA() {
 
       {/* Subtitle — Avenir Next (regular), #344466 */}
       <motion.p
-        className="font-avenir-regular text-sm text-center leading-relaxed mb-5"
+        className="font-avenir-regular text-sm text-center leading-relaxed mb-[34px]"
         style={{ color: '#344466', maxWidth: 300 }}
         initial={{ opacity: 0, y: 10 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         Real startups. Real decisions. Real outcomes.
-      </motion.p>
-
-      {/* CTA label — Avenir Next bold, #344466 */}
-      <motion.p
-        className="font-avenir-heavy"
-        style={{ color: '#070c17', fontSize: 19 }}
-        initial={{ opacity: 0, y: 8 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        Here&apos;s how that plays out:
       </motion.p>
     </section>
   )

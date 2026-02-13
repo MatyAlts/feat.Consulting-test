@@ -99,9 +99,13 @@ export default function Hero() {
                 stroke="#FBD979"
                 strokeWidth="2.12844"
                 strokeLinecap="round"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
+                initial={{ pathLength: 0, opacity: 1 }}
+                animate={{ pathLength: 1 }}
+                transition={{ 
+                  duration: 2.4, 
+                  ease: [0.4, 0, 0.2, 1], 
+                  delay: 0.6 
+                }}
               />
             </svg>
           </span>
@@ -155,7 +159,7 @@ export default function Hero() {
           <motion.img 
             src="/assets_mobile/flecha.svg" 
             alt="" 
-            className="w-[10px] h-[10px]" 
+            className="w-[8.5px] h-[8.5px]" 
             variants={{
               initial: { filter: 'brightness(0) invert(1)' },
               animate: { filter: 'brightness(0) invert(1)' },

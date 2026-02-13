@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 
 const CARDS = [
@@ -128,12 +128,16 @@ function InvestorCard({ card, index }: { card: typeof CARDS[0]; index: number })
   )
 }
 
-export default function InvestorCardStack() {
+export default function InvestorCardStack({ triggerRef }: { triggerRef: React.RefObject<HTMLDivElement | null> }) {
   return (
-    <section className="px-4 pb-10 pt-2" style={{ background: 'linear-gradient(to bottom, #f4f7ec 0%, #ffffff 100%)' }}>
+    <section className="px-4 pb-4 pt-0">
       <div className="flex flex-col gap-3">
         {CARDS.map((card, i) => (
-          <InvestorCard key={i} card={card} index={i} />
+          <React.Fragment key={i}>
+            {/* Trigger right before second card */}
+            {i === 2 && <div ref={triggerRef} style={{ height: 1, marginBottom: -1 }} />}
+            <InvestorCard card={card} index={i} />
+          </React.Fragment>
         ))}
       </div>
     </section>

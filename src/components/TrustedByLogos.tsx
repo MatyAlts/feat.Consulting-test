@@ -10,8 +10,8 @@ export default function TrustedByLogos() {
   return (
     <section
       ref={ref}
-      className="px-4 pt-0 pb-10"
-      style={{ background: '#f4f7ec', paddingBottom: 40 }}
+      className="px-4 pt-0 pb-14"
+      style={{ background: '#f4f7ec' }}
     >
       <motion.p
         className="font-avenir-regular text-center mb-5 tracking-widest"
@@ -24,21 +24,38 @@ export default function TrustedByLogos() {
       </motion.p>
 
       <motion.div
-        className="flex items-center justify-around gap-3 flex-wrap"
+        className="flex flex-col gap-6 items-center"
         initial={{ opacity: 0, y: 10 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        {LOGOS.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt={`Trusted partner ${i + 1}`}
-            className="object-contain"
-            style={{ height: 36, filter: 'grayscale(30%)' }}
-            loading="lazy"
-          />
-        ))}
+        {/* Row 1: 3 logos */}
+        <div className="flex items-center justify-center gap-6 w-full px-2">
+          {LOGOS.slice(0, 3).map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt={`Trusted partner ${i + 1}`}
+              className="object-contain"
+              style={{ height: 32, filter: 'grayscale(30%)' }}
+              loading="lazy"
+            />
+          ))}
+        </div>
+
+        {/* Row 2: 2 logos */}
+        <div className="flex items-center justify-center gap-10 w-full px-2">
+          {LOGOS.slice(3, 5).map((src, i) => (
+            <img
+              key={i + 3}
+              src={src}
+              alt={`Trusted partner ${i + 4}`}
+              className="object-contain"
+              style={{ height: 32, filter: 'grayscale(30%)' }}
+              loading="lazy"
+            />
+          ))}
+        </div>
       </motion.div>
     </section>
   )

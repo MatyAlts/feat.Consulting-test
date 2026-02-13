@@ -8,11 +8,11 @@ export default function LearningByDoing() {
   return (
     <section
       ref={ref}
-      className="flex flex-col items-center px-4 pt-0 pb-8"
-      style={{ background: '#f4f7ec' }}
+      className="flex flex-col items-center px-4 pt-0 pb-0"
+      style={{ background: '#f4f8ed' }}
     >
       <motion.h2
-        className="font-avenir-heavy text-center leading-[1.1] mb-6 text-[#0d1a2c]"
+        className="font-avenir-heavy text-center leading-[1.1] mb-[6px] text-[#0d1a2c]"
         style={{ fontSize: '1.9rem' }}
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
