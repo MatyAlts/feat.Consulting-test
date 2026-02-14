@@ -9,7 +9,7 @@ export default function BackedByPeople() {
     <section
       ref={ref}
       className="relative px-6 pt-2 pb-4 text-center"
-      style={{ background: '#F5F0E8' }}
+      style={{ background: '#EEE9DE' }}
     >
       <motion.h2
         className="font-avenir-heavy leading-tight mb-[2px] text-center"

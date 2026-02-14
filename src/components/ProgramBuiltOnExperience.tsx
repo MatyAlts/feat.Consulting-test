@@ -99,7 +99,7 @@ export default function ProgramBuiltOnExperience() {
       ref={ref} 
       className="relative px-4 pt-8"
       style={{ 
-        background: 'linear-gradient(to bottom, #f4f8ed 0%, #ffffff 120px, #ffffff 100%)' 
+        background: 'linear-gradient(to bottom, #f4f8ed 0%, #ffffff 120px, #ffffff 65%, #EEE9DE 100%)' 
       }}
     >
       <div className="max-w-[400px] mx-auto text-center mb-8">

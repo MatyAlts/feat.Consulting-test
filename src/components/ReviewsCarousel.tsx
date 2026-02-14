@@ -77,7 +77,7 @@ export default function ReviewsCarousel() {
     <section
       ref={ref}
       className="pt-0 pb-4"
-      style={{ background: 'linear-gradient(to bottom, #F5F0E8 0%, #F5F0E8 50%, #f4f7ec 100%)' }}
+      style={{ background: 'linear-gradient(to bottom, #EEE9DE 0%, #EEE9DE 50%, #f4f7ec 100%)' }}
     >
       {/* Carousel track */}
       <motion.div
