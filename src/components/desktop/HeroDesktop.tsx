@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion'
+import HeroScrollExpansion from './HeroScrollExpansion'
 
 const INVESTORS = Array.from({ length: 9 }, (_, i) => `/assets_mobile/investors (${i + 1}).png`)
 
-// Gradient that matches the mobile ShiftInFocus section
-const PURPLE_GRADIENT = 'linear-gradient(to bottom, transparent 55%, #EEE9DE 100%), radial-gradient(ellipse at 50% 45%, #4a1878 0%, #210836 60%)'
 
 export default function HeroDesktop() {
   return (
@@ -38,7 +37,7 @@ export default function HeroDesktop() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center w-full text-center mx-auto px-6 pt-14 pb-20 md:pt-16 md:pb-24 lg:pt-20 lg:pb-28 max-w-3xl lg:max-w-4xl">
+        <div className="relative z-10 flex flex-col items-center w-full text-center mx-auto px-6 pt-14 md:pt-16 lg:pt-20 max-w-3xl lg:max-w-4xl">
 
           {/* Pill badge */}
           <motion.div
@@ -99,9 +98,12 @@ export default function HeroDesktop() {
                     stroke="#FBD979"
                     strokeWidth="2.12844"
                     strokeLinecap="round"
-                    initial={{ pathLength: 0, opacity: 1 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 2.4, ease: [0.4, 0, 0.2, 1], delay: 0.6 }}
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ 
+                      pathLength: { duration: 2.4, ease: [0.4, 0, 0.2, 1], delay: 0.6 },
+                      opacity: { duration: 0.2, delay: 0.6 }
+                    }}
                   />
                 </svg>
               </span>
@@ -177,7 +179,7 @@ export default function HeroDesktop() {
 
           {/* Stars + count + avatars */}
           <motion.div
-            className="flex flex-col items-center gap-1.5"
+            className="flex flex-col items-center gap-1.5 mb-16"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.5 }}
@@ -219,94 +221,9 @@ export default function HeroDesktop() {
         </div>
       </section>
 
-      {/* ── Two Purple Rectangles (stacked) ────────────────────────────── */}
-      {/*
-        Back  : full-width, no border-radius, flush to page edges
-        Front : centered, rounded (28px), sits on top with negative margin
-                Contains all the ShiftInFocus text
-      */}
-      <div className="relative w-full" style={{ marginTop: '1.5rem' }}>
-
-        {/* Back rectangle — full width, no border-radius */}
-        <div
-          className="absolute inset-x-0 bottom-0"
-          style={{
-            background: PURPLE_GRADIENT,
-            top: '40%',         // starts partway down so it peeks behind the front rect
-            borderRadius: 0,
-            zIndex: 0,
-          }}
-        />
-
-        {/* Front rectangle — centered, rounded, all content inside */}
-        <motion.div
-          className="relative mx-auto flex flex-col items-center justify-center text-white text-center px-10 py-14"
-          style={{
-            background: PURPLE_GRADIENT,
-            borderRadius: 28,
-            maxWidth: '93%',
-            minHeight: 220,
-            zIndex: 1,
-          }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
-        >
-          {/* Label */}
-          <p
-            className="font-avenir-light mb-6 tracking-widest"
-            style={{ color: '#b7a9ff', opacity: 0.95, fontSize: '22px' }}
-          >
-            A shift in focus:
-          </p>
-
-          {/* Main heading — Forced to 1 line with whitespace-nowrap */}
-          <h2
-            className="font-avenir-medium leading-tight mb-8 whitespace-nowrap max-w-300"
-            style={{
-              fontSize: '52.5px',
-              color: '#b7a9ff',
-            }}
-          >
-            Angel Investing isn&apos;t about{' '}
-            <em className="font-avenir-medium" style={{ fontStyle: 'italic' }}>knowing</em>{' '}
-            more.
-          </h2>
-
-          {/* Divider */}
-          <div
-            className="mb-8"
-            style={{ width: 80, height: 1.5, background: 'rgba(183,169,255,0.3)' }}
-          />
-
-          {/* Subtitle — word-by-word animation triggered on scroll */}
-          <div className="flex flex-wrap justify-center gap-x-[0.35em] w-full max-w-300">
-            {["It's", "about", "deciding", "better."].map((word, i) => (
-              <motion.span
-                key={i}
-                className="font-avenir-regular text-white leading-relaxed"
-                style={{ 
-                  fontSize: '28px',
-                  ...(i >= 2 ? { 
-                    textShadow: '0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(183,169,255,0.4)',
-                    filter: 'brightness(1.4)'
-                  } : {})
-                }}
-                initial={{ opacity: 0, y: 12, filter: 'blur(8px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ 
-                  duration: 0.8, 
-                  delay: i * 0.15,
-                  ease: [0.4, 0, 0.2, 1] 
-                }}
-              >
-                {word}
-              </motion.span>
-            ))}
-          </div>
-        </motion.div>
-
+      {/* ── Scroll Expansion Rectangle peeking into view ──────────────── */}
+      <div className="relative z-10 -mt-24">
+        <HeroScrollExpansion />
       </div>
     </>
   )

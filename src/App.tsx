@@ -32,8 +32,16 @@ export default function App() {
     }
   }, [inView, activated])
 
+  // Force scroll to top on reload
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
-    <div className="bg-white" style={{ overflowX: 'clip' }}>
+    <div className="bg-white relative" style={{ overflowX: 'clip' }}>
       <main className="max-w-[428px] mx-auto bg-white shadow-2xl relative" style={{ overflowX: 'clip' }}>
         {/* S1 — Hero */}
         <Hero />

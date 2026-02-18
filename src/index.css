@@ -27,6 +27,14 @@
 
 @font-face {
   font-family: "Avenir";
+  src: url("/fonts/avenir-medium-oblique.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Avenir";
   src: url("/fonts/avenir-light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
@@ -37,6 +45,14 @@
   font-family: "AvenirNext";
   src: url("/fonts/avenir-next-regular.ttf") format("truetype");
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AvenirNext";
+  src: url("/fonts/avenir-next-demi-bold.ttf") format("truetype");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -76,7 +92,7 @@
 
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth;  <-- Removed to let Lenis handle smooth scrolling */
 }
 
 body {
@@ -107,6 +123,15 @@ body {
 .font-avenir-light {
   font-family: "Avenir", sans-serif;
   font-weight: 300;
+}
+.font-avenir-medium-oblique {
+  font-family: "Avenir", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+.font-avenir-next-demi {
+  font-family: "AvenirNext", sans-serif;
+  font-weight: 600;
 }
 
 .font-dm-regular {

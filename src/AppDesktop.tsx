@@ -10,6 +10,7 @@ import FAQDesktop from './components/desktop/FAQDesktop'
 import StickyCountdownFooterDesktop from './components/desktop/StickyCountdownFooterDesktop'
 import FinalCTADesktop from './components/desktop/FinalCTADesktop'
 import FooterDesktop from './components/desktop/FooterDesktop'
+import BackgroundShapes from './components/BackgroundShapes'
 
 export default function AppDesktop() {
   const [activated, setActivated] = useState(false)
@@ -24,9 +25,18 @@ export default function AppDesktop() {
     }
   }, [inView, activated])
 
+  // Force scroll to top on reload
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
-    <div className="bg-white min-h-screen" style={{ overflowX: 'clip' }}>
-      <main className="w-full">
+    <div className="bg-white min-h-screen relative" style={{ overflowX: 'clip' }}>
+      <BackgroundShapes />
+      <main className="w-full relative">
         {/* S1 — Hero */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <HeroDesktop />

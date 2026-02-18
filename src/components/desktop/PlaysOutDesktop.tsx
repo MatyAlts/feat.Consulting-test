@@ -1,5 +1,29 @@
-import { useRef, useEffect, forwardRef, useCallback, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useRef, forwardRef, useState, memo } from 'react'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+
+// ── Components ────────────────────────────────────────────────────────────────
+const PaintingText = ({ text, isExpanded }: { text: string; isExpanded: boolean }) => {
+  const characters = text.split('')
+  return (
+    <p className="font-avenir-regular text-white" style={{ fontSize: '25.62px' }}>
+      {characters.map((char, i) => (
+        <motion.span
+          key={i}
+          animate={{
+            color: isExpanded ? '#F5C518' : 'rgba(255, 255, 255, 0.6)',
+          }}
+          transition={{
+            duration: 0.2,
+            delay: isExpanded ? i * 0.015 : 0,
+            ease: 'easeOut'
+          }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </p>
+  )
+}
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 const CARDS = [
@@ -7,25 +31,29 @@ const CARDS = [
     image: '/assets_mobile/plays_out_pic1.png',
     title: 'Engage in Live Investment Opportunities',
     subtitle: 'Live companies. Real timelines. Actual stakes.',
-    body: 'You work with our pool of active startups, tangible materials, and real timelines — not case studies or simulations.\n\nYou evaluate opportunities as they unfold, discuss tradeoffs with peers, and co-invest in live deals.\n\nBy the end, this isn\'t theoretical exposure. It\'s experience you can recognize and reuse.',
+    expandedTitle: 'Live companies. Real timelines. Actual stakes.',
+    expandedBody: 'You work with our pool of active startups, tangible materials, and real timelines (not case studies or simulations).\nYou evaluate opportunities as they unfold, discuss tradeoffs with peers, and co-invest in live deals.\nBy the end, this isn’t theoretical exposure. It’s experience you can recognize and reuse.'
   },
   {
     image: '/assets_mobile/plays_out_pic2.png',
     title: 'Sharpen Your Thinking with Other Investors',
     subtitle: 'Judgment is formed in interaction, not isolation.',
-    body: 'You challenge assumptions, weigh perspectives, and pressure-test decisions alongside a diverse group of thoughtful investors, in real time.',
+    expandedTitle: 'Judgment is formed in interaction, not isolation.',
+    expandedBody: 'You challenge assumptions, weigh perspectives, and pressure-test decisions alongside a diverse group of thoughtful investors, in real time.'
   },
   {
     image: '/assets_mobile/plays_out_pic3.png',
     title: 'Make an Investment Together',
     subtitle: 'From discussion to commitment.',
-    body: 'You move from debate to action by co-investing with peers, pooling judgment, sharing responsibility, and committing capital together.',
+    expandedTitle: 'From discussion to commitment.',
+    expandedBody: 'You move from debate to action by co-investing with peers, pooling judgment, sharing responsibility, and committing capital together.'
   },
   {
     image: '/assets_mobile/plays_out_pic4.png',
     title: 'Forge Your Investor Lens',
-    subtitle: 'The perspective you\'ll use in every future investment.',
-    body: 'Through repeated real decisions, you emerge with a personal investment perspective — a repeatable way to assess risk, quality, and fit on your own terms.',
+    subtitle: 'The perspective you’ll use in every future investment.',
+    expandedTitle: 'The perspective you’ll use in every future investment.',
+    expandedBody: 'Through repeated real decisions, you emerge with a personal investment perspective: a repeatable way to assess risk, quality, and fit on your own terms.'
   },
 ]
 
@@ -39,61 +67,8 @@ const PlaysOutCardDesktop = forwardRef<
   HTMLDivElement,
   { card: (typeof CARDS)[0]; index: number; imageRight: boolean }
 >(({ card, index, imageRight }, ref) => {
+  const [isExpanded, setIsExpanded] = useState(false)
   const stickyTop = TITLE_OFFSET + index * STACK_OFFSET
-
-  // Text panel
-  const textPanel = (
-    <div
-      className="relative flex flex-col justify-center px-16 xl:px-20 overflow-hidden"
-      style={{ width: '45%', flexShrink: 0 }}
-    >
-      {/* Title */}
-      <h3
-        className="font-avenir-heavy text-white leading-tight mb-4"
-        style={{ fontSize: 'clamp(1.6rem, 2.4vw, 2.2rem)' }}
-      >
-        {card.title}
-      </h3>
-
-      {/* Subtitle */}
-      <p
-        className="font-avenir-medium mb-6"
-        style={{ color: 'rgba(255,255,255,0.5)', fontSize: 'clamp(0.85rem, 1.2vw, 1rem)' }}
-      >
-        {card.subtitle}
-      </p>
-
-      {/* Divider */}
-      <div
-        className="mb-6"
-        style={{ width: 48, height: 1, background: 'rgba(255,255,255,0.15)' }}
-      />
-
-      {/* Full body */}
-      {card.body.split('\n\n').map((para, i) => (
-        <p
-          key={i}
-          className="font-avenir-regular leading-relaxed mb-4 last:mb-0"
-          style={{ color: 'rgba(255,255,255,0.65)', fontSize: 'clamp(0.82rem, 1.1vw, 0.95rem)' }}
-        >
-          {para}
-        </p>
-      ))}
-    </div>
-  )
-
-  // Image panel
-  const imagePanel = (
-    <div className="flex-1 overflow-hidden" style={{ minWidth: 0 }}>
-      <img
-        src={card.image}
-        alt={card.title}
-        className="w-full h-full object-cover"
-        loading="lazy"
-        style={{ display: 'block' }}
-      />
-    </div>
-  )
 
   return (
     // Outer wrapper — sticky + paddingBottom creates scroll distance for stacking
@@ -108,7 +83,7 @@ const PlaysOutCardDesktop = forwardRef<
       }}
     >
       <div
-        className="w-full max-w-350 mx-auto flex overflow-hidden shadow-2xl"
+        className="w-full max-w-350 mx-auto flex overflow-hidden shadow-2xl relative"
         style={{
           // Cards are now shorter to let the layout breathe
           height: '75vh',
@@ -116,15 +91,138 @@ const PlaysOutCardDesktop = forwardRef<
           borderRadius: 40,
         }}
       >
+        {/* Yellow Button */}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={`absolute bottom-10 ${imageRight ? 'left-10' : 'right-10'} z-30 w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110`}
+          style={{ background: '#F5C518', cursor: 'pointer' }}
+        >
+          <motion.span
+            animate={{ rotate: isExpanded ? 45 : 0 }}
+            className="text-4xl text-[#0B2232] font-avenir-heavy leading-none"
+            style={{ marginTop: -4 }}
+          >
+            +
+          </motion.span>
+        </button>
+
         {imageRight ? (
           <>
-            {textPanel}
-            {imagePanel}
+            <div
+              className="relative flex flex-col justify-center px-16 xl:px-20 overflow-hidden"
+              style={{ width: '50%', flexShrink: 0 }}
+            >
+                <div className="relative w-full">
+                  {/* Title and Subtitle Group - This moves as one unit */}
+                  <motion.div
+                    animate={{ y: isExpanded ? -120 : 0 }}
+                    transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  >
+                    <h3
+                      className="font-avenir-medium text-white leading-tight mb-4"
+                      style={{ fontSize: '45.74px' }}
+                    >
+                      {card.title}
+                    </h3>
+
+                    {/* Subtitle / Yellow Painting area */}
+                    <div className="relative mb-8" style={{ minHeight: '60px' }}>
+                      <PaintingText text={card.subtitle} isExpanded={isExpanded} />
+                    </div>
+                  </motion.div>
+
+                  {/* Body Content - Absolute positioned so it doesn't affect initial justify-center */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+                    animate={{
+                      opacity: isExpanded ? 1 : 0,
+                      y: isExpanded ? -100 : 20,
+                      filter: isExpanded ? 'blur(0px)' : 'blur(10px)',
+                    }}
+                    transition={{ duration: 0.6, delay: isExpanded ? 0.3 : 0, ease: 'easeInOut' }}
+                    className="absolute top-full left-0 w-full space-y-4"
+                    style={{ pointerEvents: isExpanded ? 'auto' : 'none' }}
+                  >
+                    {card.expandedBody.split('\n').map((line, idx) => (
+                      <p
+                        key={idx}
+                        className="font-avenir-regular text-white leading-relaxed"
+                        style={{ fontSize: '18px', opacity: 0.8 }}
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </motion.div>
+                </div>
+            </div>
+            <div className="flex-1 overflow-hidden" style={{ minWidth: 0 }}>
+              <img
+                src={card.image}
+                alt={card.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                style={{ display: 'block' }}
+              />
+            </div>
           </>
         ) : (
           <>
-            {imagePanel}
-            {textPanel}
+            <div className="flex-1 overflow-hidden" style={{ minWidth: 0 }}>
+              <img
+                src={card.image}
+                alt={card.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                style={{ display: 'block' }}
+              />
+            </div>
+            <div
+              className="relative flex flex-col justify-center px-16 xl:px-20 overflow-hidden"
+              style={{ width: '50%', flexShrink: 0 }}
+            >
+                <div className="relative w-full">
+                  {/* Title and Subtitle Group - This moves as one unit */}
+                  <motion.div
+                    animate={{ y: isExpanded ? -120 : 0 }}
+                    transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  >
+                    <h3
+                      className="font-avenir-medium text-white leading-tight mb-4"
+                      style={{ fontSize: '45.74px' }}
+                    >
+                      {card.title}
+                    </h3>
+
+                    {/* Subtitle / Yellow Painting area */}
+                    <div className="relative mb-8" style={{ minHeight: '60px' }}>
+                      <PaintingText text={card.subtitle} isExpanded={isExpanded} />
+                    </div>
+                  </motion.div>
+
+                  {/* Body Content - Absolute positioned so it doesn't affect initial justify-center */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+                    animate={{
+                      opacity: isExpanded ? 1 : 0,
+                      y: isExpanded ? -100 : 20,
+                      filter: isExpanded ? 'blur(0px)' : 'blur(10px)',
+                    }}
+                    transition={{ duration: 0.6, delay: isExpanded ? 0.3 : 0, ease: 'easeInOut' }}
+                    className="absolute top-full left-0 w-full space-y-4"
+                    style={{ pointerEvents: isExpanded ? 'auto' : 'none' }}
+                  >
+                    {card.expandedBody.split('\n').map((line, idx) => (
+                      <p
+                        key={idx}
+                        className="font-avenir-regular text-white leading-relaxed"
+                        style={{ fontSize: '18px', opacity: 0.8 }}
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </motion.div>
+                </div>
+            </div>
           </>
         )}
       </div>
@@ -134,35 +232,21 @@ const PlaysOutCardDesktop = forwardRef<
 
 PlaysOutCardDesktop.displayName = 'PlaysOutCardDesktop'
 
+const MemoizedPlaysOutCard = memo(PlaysOutCardDesktop)
+
 // ── Section ───────────────────────────────────────────────────────────────────
 export default function PlaysOutDesktop() {
-  const [titleY, setTitleY] = useState(0)
-  const lastCardRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const headingRef = useRef(null)
-  const headingInView = useInView(headingRef, { once: true, margin: '-80px' })
+  
+  // High performance scroll tracking without triggering re-renders
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["end end", "end start"]
+  })
 
-  const updateScrollEffects = useCallback(() => {
-    if (containerRef.current) {
-      const bottom = containerRef.current.getBoundingClientRect().bottom
-      const threshold = 620
-      setTitleY(bottom < threshold ? bottom - threshold : 0)
-    }
-  }, [])
-
-  useEffect(() => {
-    const t = setTimeout(updateScrollEffects, 100)
-    return () => clearTimeout(t)
-  }, [updateScrollEffects])
-
-  useEffect(() => {
-    window.addEventListener('scroll', updateScrollEffects, { passive: true })
-    window.addEventListener('resize', updateScrollEffects)
-    return () => {
-      window.removeEventListener('scroll', updateScrollEffects)
-      window.removeEventListener('resize', updateScrollEffects)
-    }
-  }, [updateScrollEffects])
+  // Smoothly move the title out as we reach the end of the section
+  const titleY = useTransform(scrollYProgress, [0.8, 1], [0, -200])
+  const smoothTitleY = useSpring(titleY, { stiffness: 100, damping: 30, restDelta: 0.001 })
 
   return (
     <section
@@ -170,52 +254,12 @@ export default function PlaysOutDesktop() {
       className="relative"
       style={{ background: '#EEE9DE' }}
     >
-      {/* ── Introducing SIA heading ───────────────────────────────── */}
-      <div
-        ref={headingRef}
-        className="text-center px-6 pt-16 pb-12 max-w-4xl mx-auto"
-      >
-        <motion.p
-          className="font-avenir-light mb-4 text-[#1c0831]"
-          style={{ fontSize: '22px' }}
-          initial={{ opacity: 0, y: 10 }}
-          animate={headingInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          Introducing SIA Angel Hub
-        </motion.p>
 
-        <motion.h2
-          className="text-center leading-[1.1] mb-6"
-          initial={{ opacity: 0, y: 16 }}
-          animate={headingInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          style={{ fontSize: '64.5px' }}
-        >
-          <span className="font-avenir-heavy block text-[#070c17]">
-            Build Judgment through
-          </span>
-          <span className="block text-[#070c17]">
-            <span className="font-avenir-heavy">Action </span>
-            <span className="font-avenir-medium">(not theory)</span>
-          </span>
-        </motion.h2>
-
-        <motion.p
-          className="font-avenir-regular text-center leading-relaxed whitespace-nowrap text-[#344466]"
-          style={{ fontSize: '28px' }}
-          initial={{ opacity: 0, y: 10 }}
-          animate={headingInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          Real startups. Real decisions. Real outcomes.
-        </motion.p>
-      </div>
 
       {/* ── Sticky "Here's how that plays out:" divider ──────────── */}
       <motion.div
         className="sticky z-10 py-5 px-6 md:px-10 lg:px-16"
-        style={{ top: 0, background: '#EEE9DE', y: titleY }}
+        style={{ top: 0, background: '#EEE9DE', y: smoothTitleY }}
       >
         <div className="flex items-center gap-5">
           <div className="flex-1 h-px" style={{ background: 'rgba(7,12,23,0.12)' }} />
@@ -233,16 +277,11 @@ export default function PlaysOutDesktop() {
       {/* Padding so cards don't touch the page edges */}
       <div className="px-6 md:px-10 lg:px-14">
         {CARDS.map((card, i) => (
-          <PlaysOutCardDesktop
+          <MemoizedPlaysOutCard
             key={i}
             card={card}
             index={i}
-            // 0 → text left, image right
-            // 1 → image left, text right
-            // 2 → text left, image right
-            // 3 → image left, text right
             imageRight={i % 2 === 0}
-            ref={i === CARDS.length - 1 ? lastCardRef : null}
           />
         ))}
       </div>
