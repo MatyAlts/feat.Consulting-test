@@ -202,22 +202,38 @@ export default function Hero() {
 
           {/* Stacked avatars */}
           <div className="flex mt-1">
-            {INVESTORS.map((src, i) => (
-              <img
-                key={i}
-                src={src}
-                alt={`Investor ${i + 1}`}
-                className="rounded-full border-2 border-white object-cover"
-                style={{
-                  width: 32,
-                  height: 32,
-                  marginLeft: i === 0 ? 0 : -10,
-                  zIndex: i,
-                  position: 'relative',
-                }}
-                loading="lazy"
-              />
-            ))}
+            {INVESTORS.map((src, i) => {
+              const hoverAnim = [
+                { scale: 1.25, rotate: -6, y: -4, zIndex: 20 },
+                { scale: 1.25, rotate: 5, y: -6, zIndex: 20 },
+                { scale: 1.25, rotate: -3, y: -2, zIndex: 20 },
+                { scale: 1.25, rotate: 4, y: -5, zIndex: 20 },
+                { scale: 1.25, rotate: -8, y: -3, zIndex: 20 },
+                { scale: 1.25, rotate: 3, y: -7, zIndex: 20 },
+                { scale: 1.25, rotate: -4, y: -4, zIndex: 20 },
+                { scale: 1.25, rotate: 7, y: -5, zIndex: 20 },
+                { scale: 1.25, rotate: -5, y: -3, zIndex: 20 },
+              ][i % 9];
+
+              return (
+                <motion.img
+                  key={i}
+                  src={src}
+                  alt={`Investor ${i + 1}`}
+                  className="rounded-full border-2 border-white object-cover cursor-pointer"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    marginLeft: i === 0 ? 0 : -10,
+                    zIndex: i,
+                    position: 'relative',
+                  }}
+                  whileHover={hoverAnim}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  loading="lazy"
+                />
+              );
+            })}
           </div>
         </motion.div>
       </div>

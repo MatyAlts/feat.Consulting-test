@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, LayoutGroup } from 'framer-motion'
 import './index.css'
 import HeroDesktop from './components/desktop/HeroDesktop'
 import PlaysOutDesktop from './components/desktop/PlaysOutDesktop'
@@ -35,43 +35,45 @@ export default function AppDesktop() {
 
   return (
     <div className="bg-white min-h-screen relative" style={{ overflowX: 'clip' }}>
-      <BackgroundShapes />
-      <main className="w-full relative">
-        {/* S1 — Hero */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <HeroDesktop />
-        </motion.div>
+      <LayoutGroup>
+        <BackgroundShapes />
+        <main className="w-full relative">
+          {/* S1 — Hero */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <HeroDesktop />
+          </motion.div>
 
-        {/* S2 — Plays Out */}
-        <PlaysOutDesktop />
+          {/* S2 — Plays Out */}
+          <PlaysOutDesktop />
 
-        {/* Activation point — sticky footer appears after PlayOutCards */}
-        <div ref={activationRef} className="h-0 w-0 pointer-events-none" />
+          {/* Activation point — sticky footer appears after PlayOutCards */}
+          <div ref={activationRef} className="h-0 w-0 pointer-events-none" />
 
-        {/* S3 — Learning by Doing */}
-        <LearningByDoingDesktop />
+          {/* S3 — Learning by Doing */}
+          <LearningByDoingDesktop />
 
-        {/* S4 — Program Built on Experience */}
-        <ProgramBuiltOnExperienceDesktop />
+          {/* S4 — Program Built on Experience */}
+          <ProgramBuiltOnExperienceDesktop />
 
-        {/* S5 — Become the Investor */}
-        <BecomeTheInvestorDesktop />
+          {/* S5 — Become the Investor */}
+          <BecomeTheInvestorDesktop />
 
-        {/* S6 — FAQ Section */}
-        <FAQDesktop 
-          onLastFAQVisible={(visible) => {
-            // If the last FAQ sensor is NOT visible, it means we are below it
-            // We suppress the footer when we are below the FAQ items
-            setFooterSuppressed(!visible)
-          }} 
-        />
+          {/* S6 — FAQ Section */}
+          <FAQDesktop 
+            onLastFAQVisible={(visible) => {
+              // If the last FAQ sensor is NOT visible, it means we are below it
+              // We suppress the footer when we are below the FAQ items
+              setFooterSuppressed(!visible)
+            }} 
+          />
 
-        {/* S7 — Final CTA */}
-        <FinalCTADesktop />
+          {/* S7 — Final CTA */}
+          <FinalCTADesktop />
 
-        {/* Footer */}
-        <FooterDesktop />
-      </main>
+          {/* Footer */}
+          <FooterDesktop />
+        </main>
+      </LayoutGroup>
 
       {/* Sticky countdown footer */}
       <StickyCountdownFooterDesktop 

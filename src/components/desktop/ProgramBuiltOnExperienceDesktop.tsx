@@ -1,24 +1,24 @@
 import { useRef, useEffect, useState } from 'react'
-import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion'
+import { motion, useInView, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion'
 
 const REVIEWS = [
   {
     quote: '\u201cIt didn\u2019t just teach me investing. It changed how I decide.\u201d',
-    body: "What an amazing program! I joined it 'knowing' what the discussions would be about\u2026 I was wrong. The depth of interaction and the practical approach completely transformed how I evaluate opportunities.",
+    body: "What an amazing program! I joined it 'knowing' what the discussions would be about. And I was surprised not only by the conversations' content but about what I learned about investing and my investment thesis. My favorite question was asked in Session 16, by a fellow participant: 'As investors, do you want to be seen as the investor that invested in X, or the investor that invested in Y?' This question helped solidify my choice.",
     name: 'Matteo Costa',
     role: 'Business Administrator | Angel Investor',
     avatar: '/assets_mobile/review1.png',
   },
   {
     quote: '\u201cDeep learning comes from real-life context.\u201d',
-    body: 'There is no better way of learning what you read in textbooks and watch in videos than by applying it in real time with real startups and real capital.',
+    body: 'There is no better way of learning what you read in textbooks and watch in videos about valuations, security types, economic terms, investors rights, and so forth, than to put it into practice in real life conversations with founders. At every cohort, we are able to evaluate 60+ of companies, examine their team culture, understand their market opportunity. As I continue my journey as startup investor, I feel more equipped to evaluate companies at an early stage with a deep understanding of what it takes to support them in their journey to success.',
     name: 'Matteo Costa',
     role: 'Business Administrator | Angel Investor',
     avatar: '/assets_mobile/review2.png',
   },
   {
     quote: '\u201cA safe space for you to broaden your knowledge in industries.\u201d',
-    body: 'One exciting thing about the program is that it creates a safe space for you to broaden your knowledge across sectors without the usual barriers of entry.',
+    body: 'One exciting thing about the program is that it creates a safe space for you to broaden your knowledge in industries. You can be an expert in a particular sector and never venture outside it. This program is excellent at providing you with a network of other investors with additional expertise you can tap into and many companies from different backgrounds and locations. This is an excellent way of learning the ropes of angel investing with like-minded people.',
     name: 'Joao Paulo Diogo',
     role: 'Business Administrator | Angel Investor',
     avatar: '/assets_mobile/review3.png',
@@ -270,24 +270,39 @@ export default function ProgramBuiltOnExperienceDesktop() {
 function BackedByPeopleSlider({ inView }: { inView: boolean }) {
   const [current, setCurrent] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const [selectedReviewPopup, setSelectedReviewPopup] = useState<number | null>(null)
+  
   const titleRef = useRef(null)
   const titleInView = useInView(titleRef, { once: true, margin: '-50px' })
-  
-  const next = () => setCurrent((c) => (c + 1) % REVIEWS.length)
-  const prev = () => setCurrent((c) => (c - 1 + REVIEWS.length) % REVIEWS.length)
+
+  const n = REVIEWS.length
+  const next = () => setCurrent((c) => (c + 1) % n)
+  const goTo = (i: number) => setCurrent(i)
 
   useEffect(() => {
-    if (!inView || isPaused) return
+    if (!inView || isPaused || selectedReviewPopup !== null) return
     const timer = setInterval(next, 5000)
     return () => clearInterval(timer)
-  }, [inView, isPaused])
+  }, [inView, isPaused, current, selectedReviewPopup])
+
+  // Returns index with wrapping
+  const wrap = (i: number) => ((i % n) + n) % n
+
+  // Card positions: -1 = left peek, 0 = center, 1 = right peek
+  const getOffset = (i: number) => {
+    let diff = i - current
+    // Normalize to -1, 0, 1 for infinite loop
+    if (diff > n / 2) diff -= n
+    if (diff < -n / 2) diff += n
+    return diff
+  }
 
   return (
     <div className="mt-32">
-      {/* Header Row — Aligned to the right */}
+      {/* Header Row */}
       <div className="flex justify-end mb-16">
         <div className="text-right flex flex-col items-end">
-          <h2 
+          <h2
             ref={titleRef}
             className="font-avenir-heavy text-[#0d1a2c] leading-tight"
             style={{ fontSize: 'clamp(2.5rem, 4vw, 56px)', maxWidth: '850px' }}
@@ -319,7 +334,7 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
               ))}
             </div>
           </h2>
-          <motion.p 
+          <motion.p
             className="font-avenir-regular text-[#0d1a2c]/70 text-lg lg:text-xl max-w-125 lg:mb-2 mt-4"
             initial={{ opacity: 0, y: 10 }}
             animate={titleInView ? { opacity: 1, y: 0 } : {}}
@@ -330,108 +345,201 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
         </div>
       </div>
 
-      {/* Main Slider Card */}
-      <motion.div 
-        className="relative bg-white rounded-[40px] p-10 lg:p-14 shadow-xl border border-[#0d1a2c]/5 flex flex-col lg:flex-row gap-12 overflow-hidden"
-        initial={{ opacity: 0, y: 30 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.7, delay: 0.2 }}
+      {/* Carousel */}
+      <div
+        className="relative overflow-hidden"
+        style={{ height: '480px' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* Floating Arrows in top-right corner of the card */}
-        <div className="absolute top-12 right-16 flex gap-10 z-20">
-          <button 
-            onClick={prev}
-            className="flex items-center justify-center transition-all duration-300 group cursor-pointer border-none bg-transparent p-0"
-            aria-label="Previous testimonial"
-          >
-            <svg 
-              width="54" 
-              height="32" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2.5" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-              className="rotate-180 transition-all duration-300 opacity-30 group-hover:opacity-100 group-hover:text-[#0d1a2c]"
-              style={{ color: '#000' }}
-            >
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-          <button 
-            onClick={next}
-            className="flex items-center justify-center transition-all duration-300 group cursor-pointer border-none bg-transparent p-0"
-            aria-label="Next testimonial"
-          >
-            <svg 
-              width="54" 
-              height="32" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2.5" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-              className="transition-all duration-300 opacity-30 group-hover:opacity-100 group-hover:text-[#0d1a2c]"
-              style={{ color: '#000' }}
-            >
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-        </div>
+        {REVIEWS.map((review, i) => {
+          const offset = getOffset(i)
+          // Only render center and ±1 neighbors
+          if (Math.abs(offset) > 1) return null
 
-        <div className="lg:w-95 shrink-0">
-          <div className="relative aspect-4/5 rounded-4xl overflow-hidden shadow-lg group">
-             <motion.img 
-               key={REVIEWS[current].avatar}
-               src={REVIEWS[current].avatar} 
-               alt={REVIEWS[current].name}
-               className="w-full h-full object-cover"
-               initial={{ scale: 1.1, opacity: 0 }}
-               animate={{ scale: 1, opacity: 1 }}
-               transition={{ duration: 0.6 }}
-             />
-          </div>
-        </div>
+          const isCenter = offset === 0
+          const isLeft = offset === -1
+          const isRight = offset === 1
 
-        <div className="flex-1 flex flex-col justify-center">
-           <motion.div 
-             key={REVIEWS[current].quote}
-             initial={{ opacity: 0, x: 20 }}
-             animate={{ opacity: 1, x: 0 }}
-             transition={{ duration: 0.5 }}
-           >
-             <p className="font-avenir-heavy text-[#0d1a2c] leading-tight mb-8" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 32px)' }}>
-               {REVIEWS[current].quote}
-             </p>
-             <p className="font-avenir-regular text-[#0d1a2c]/70 text-lg lg:text-xl leading-relaxed mb-12">
-               &ldquo;{REVIEWS[current].body}&rdquo;
-             </p>
-             
-             <div>
-                <p className="font-avenir-heavy text-[#0d1a2c] text-xl mb-1">{REVIEWS[current].name}</p>
-                <p className="font-avenir-regular text-[#0d1a2c]/50 text-base">{REVIEWS[current].role}</p>
-             </div>
-           </motion.div>
-        </div>
-      </motion.div>
-      
-      {/* Dot Indicators */}
-      <div className="flex justify-center gap-3 mt-10">
-         {REVIEWS.map((_, i) => (
-           <button 
-             key={i} 
-             onClick={() => setCurrent(i)}
-             className={`h-2.5 rounded-full transition-all duration-300 ${i === current ? 'w-8 bg-[#5643CC]' : 'w-2.5 bg-[#0d1a2c]/10 hover:bg-[#0d1a2c]/20'}`}
-             aria-label={`Go to slide ${i + 1}`}
-           />
-         ))}
+          return (
+            <motion.div
+              key={i}
+              className="absolute top-0 flex flex-col items-center justify-center rounded-[32px] shadow-xl p-8 cursor-pointer"
+              style={{
+                width: isCenter ? '46%' : '28%',
+                height: isCenter ? '100%' : '88%',
+                top: isCenter ? '0%' : '6%',
+                background: '#ffffff',
+                zIndex: isCenter ? 10 : 5,
+                filter: isCenter ? 'none' : 'brightness(0.75) saturate(0.5)',
+              }}
+              animate={{
+                opacity: isCenter ? 1 : 0.7,
+                scale: isCenter ? 1 : 0.95,
+                left: isLeft ? '2%' : isCenter ? '27%' : isRight ? '70%' : '27%',
+              }}
+              transition={{ 
+                duration: 0.8, 
+                ease: [0.16, 1, 0.3, 1] // Custom quintic ease for ultra-smooth feel
+              }}
+              onClick={() => !isCenter && goTo(i)}
+            >
+              <div className="flex-1 flex flex-col items-center justify-center text-center mt-4">
+                {/* Avatar circle */}
+                <div
+                  className="rounded-full overflow-hidden shadow-md mx-auto mb-8"
+                  style={{
+                    width: isCenter ? 180 : 120,
+                    height: isCenter ? 180 : 120,
+                    flexShrink: 0,
+                  }}
+                >
+                  <img
+                    src={review.avatar}
+                    alt={review.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Content - strictly Name and Role */}
+                <p
+                  className="font-avenir-heavy text-[#0d1a2c]"
+                  style={{ fontSize: isCenter ? '28px' : '20px' }}
+                >
+                  {review.name}
+                </p>
+                <p
+                  className="font-avenir-regular text-[#0d1a2c]/70 leading-snug mt-2"
+                  style={{ fontSize: isCenter ? '18px' : '14px', maxWidth: '85%' }}
+                >
+                  {review.role}
+                </p>
+              </div>
+
+              {/* Bottom right "+" */}
+              {isCenter && (
+                <div className="absolute bottom-6 right-6 z-50">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setSelectedReviewPopup(i);
+                    }}
+                    className="flex items-center justify-center rounded-full text-white font-avenir-light transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer"
+                    style={{ 
+                      width: 52, 
+                      height: 52, 
+                      background: '#0d1a2c', 
+                      fontSize: '36px', 
+                      lineHeight: 1,
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                    }}
+                  >
+                    <span style={{ transform: 'translateY(-2px)'}}>+</span>
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          )
+        })}
       </div>
+
+      {/* Avatar dot indicators */}
+      <div className="flex justify-center gap-4 mt-8">
+        {REVIEWS.map((review, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            aria-label={`Go to ${review.name}`}
+            className="flex flex-col items-center gap-1 group relative outline-hidden cursor-pointer"
+          >
+            <motion.div
+              className="rounded-full overflow-hidden shadow-sm"
+              initial={false}
+              animate={{
+                width: i === current ? 44 : 36,
+                height: i === current ? 44 : 36,
+                opacity: i === current ? 1 : 0.45,
+                border: i === current ? '2px solid #0d1a2c' : '2px solid transparent',
+              }}
+              whileHover={{ 
+                scale: 1.25, 
+                opacity: 1,
+                y: -5,
+                boxShadow: '0 8px 16px rgba(13, 26, 44, 0.2)'
+              }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
+              <img
+                src={review.avatar}
+                alt={review.name}
+                className="w-full h-full object-cover transition-transform group-hover:scale-110"
+              />
+            </motion.div>
+          </button>
+        ))}
+      </div>
+
+      {/* Full Review Popup */}
+      <AnimatePresence>
+        {selectedReviewPopup !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
+            onClick={() => setSelectedReviewPopup(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              className="bg-white rounded-[40px] p-8 md:p-12 max-w-4xl w-full relative shadow-2xl flex flex-col md:flex-row gap-8 items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setSelectedReviewPopup(null)}
+                className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-[#0d1a2c]/60 hover:text-[#0d1a2c] bg-gray-100/50 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Close review popup"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+
+              <div className="shrink-0">
+                <div className="w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden shadow-lg border-4 border-white">
+                  <img 
+                    src={REVIEWS[selectedReviewPopup].avatar} 
+                    alt={REVIEWS[selectedReviewPopup].name} 
+                    className="w-full h-full object-cover" 
+                  />
+                </div>
+              </div>
+
+              <div className="flex-1 text-center md:text-left flex flex-col justify-center">
+                <h4 className="font-avenir-heavy text-[#0d1a2c] text-2xl md:text-[32px] mb-4 leading-tight">
+                  {REVIEWS[selectedReviewPopup].quote}
+                </h4>
+                <p className="font-avenir-regular text-[#0d1a2c]/80 text-lg md:text-[20px] mb-8 leading-relaxed italic">
+                  {REVIEWS[selectedReviewPopup].body}
+                </p>
+                <div>
+                  <p className="font-avenir-heavy text-[#0d1a2c] text-xl mb-1">{REVIEWS[selectedReviewPopup].name}</p>
+                  <p className="font-avenir-regular text-[#0d1a2c]/70 text-lg">{REVIEWS[selectedReviewPopup].role}</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
+
+
+

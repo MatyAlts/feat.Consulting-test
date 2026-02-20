@@ -50,6 +50,7 @@ export default function BackgroundShapes() {
     <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-5 select-none hidden md:block">
       {shapes.map((shape, i) => (
         <motion.img
+          layout
           key={i}
           src={shape.src}
           alt=""
@@ -66,7 +67,10 @@ export default function BackgroundShapes() {
           }}
           whileInView={{ opacity: shape.opacity }}
           viewport={{ once: true, margin: "600px" }}
-          transition={{ duration: 1.2 }}
+          transition={{
+            layout: { type: 'spring', stiffness: 150, damping: 25 },
+            opacity: { duration: 0.8, delay: 0.5 }
+          }}
         />
       ))}
     </div>

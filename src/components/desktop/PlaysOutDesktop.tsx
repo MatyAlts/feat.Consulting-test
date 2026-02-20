@@ -1,11 +1,11 @@
 import { useRef, forwardRef, useState, memo } from 'react'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 // ── Components ────────────────────────────────────────────────────────────────
 const PaintingText = ({ text, isExpanded }: { text: string; isExpanded: boolean }) => {
   const characters = text.split('')
   return (
-    <p className="font-avenir-regular text-white" style={{ fontSize: '25.62px' }}>
+    <p className="font-avenir-regular text-white" style={{ fontSize: 'clamp(24px, 1.8vw, 32px)' }}>
       {characters.map((char, i) => (
         <motion.span
           key={i}
@@ -29,21 +29,21 @@ const PaintingText = ({ text, isExpanded }: { text: string; isExpanded: boolean 
 const CARDS = [
   {
     image: '/assets_mobile/plays_out_pic1.png',
-    title: 'Engage in Live Investment Opportunities',
+    title: 'Engage in Live\nInvestment Opportunities',
     subtitle: 'Live companies. Real timelines. Actual stakes.',
     expandedTitle: 'Live companies. Real timelines. Actual stakes.',
-    expandedBody: 'You work with our pool of active startups, tangible materials, and real timelines (not case studies or simulations).\nYou evaluate opportunities as they unfold, discuss tradeoffs with peers, and co-invest in live deals.\nBy the end, this isn’t theoretical exposure. It’s experience you can recognize and reuse.'
+    expandedBody: 'You work with our pool of active startups, tangible materials, and real timelines (not case studies or simulations).\nYou evaluate opportunities as they unfold, discuss tradeoffs with peers, and co-invest in live deals.'
   },
   {
     image: '/assets_mobile/plays_out_pic2.png',
-    title: 'Sharpen Your Thinking with Other Investors',
+    title: 'Sharpen Your Thinking\nwith Other Investors',
     subtitle: 'Judgment is formed in interaction, not isolation.',
     expandedTitle: 'Judgment is formed in interaction, not isolation.',
     expandedBody: 'You challenge assumptions, weigh perspectives, and pressure-test decisions alongside a diverse group of thoughtful investors, in real time.'
   },
   {
     image: '/assets_mobile/plays_out_pic3.png',
-    title: 'Make an Investment Together',
+    title: 'Make an Investment\nTogether',
     subtitle: 'From discussion to commitment.',
     expandedTitle: 'From discussion to commitment.',
     expandedBody: 'You move from debate to action by co-investing with peers, pooling judgment, sharing responsibility, and committing capital together.'
@@ -70,8 +70,74 @@ const PlaysOutCardDesktop = forwardRef<
   const [isExpanded, setIsExpanded] = useState(false)
   const stickyTop = TITLE_OFFSET + index * STACK_OFFSET
 
+  const textContainerJSX = (
+    <div
+      className="relative flex flex-col justify-center px-[39.28px] overflow-hidden shadow-2xl border border-white/5"
+      style={{ background: '#0B2232', borderRadius: 40 }}
+    >
+      <div className="relative w-full">
+        {/* Title and Subtitle Group — slides up when expanded */}
+        <motion.div
+          animate={{ y: isExpanded ? -80 : 0 }}
+          transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <h3
+            className="font-avenir-medium text-white leading-tight mb-4"
+            style={{ fontSize: 'clamp(38px, 3vw, 52px)' }}
+          >
+            {card.title.split('\n').map((line, i) => (
+              <span key={i}>
+                {line}
+                {i < card.title.split('\n').length - 1 && <br />}
+              </span>
+            ))}
+          </h3>
+
+          <div className="relative mb-0">
+            <PaintingText text={card.subtitle} isExpanded={isExpanded} />
+          </div>
+        </motion.div>
+
+        {/* Body Content — fades in/out with blur */}
+        <motion.div
+          animate={{
+            opacity: isExpanded ? 1 : 0,
+            y: isExpanded ? -40 : 20,
+            filter: isExpanded ? 'blur(0px)' : 'blur(10px)',
+          }}
+          transition={{ duration: 0.5, delay: isExpanded ? 0.1 : 0, ease: [0.4, 0, 0.2, 1] }}
+          className="absolute top-full left-0 w-full space-y-4"
+          style={{ pointerEvents: isExpanded ? 'auto' : 'none' }}
+        >
+          {card.expandedBody.split('\n').map((line, idx) => (
+            <p
+              key={idx}
+              className="font-avenir-regular text-white leading-relaxed"
+              style={{ fontSize: 'clamp(18px, 1.2vw, 24px)', opacity: 0.8 }}
+            >
+              {line}
+            </p>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Toggle button — rotates from "+" to "x" */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="absolute bottom-10 right-10 z-30 transition-all duration-300 hover:scale-110 active:scale-95"
+      >
+        <motion.span
+          animate={{ rotate: isExpanded ? 45 : 0 }}
+          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+          className="text-4xl leading-none block font-avenir-light text-[#fbd979] origin-center"
+        >
+          +
+        </motion.span>
+      </button>
+    </div>
+  )
+
   return (
-    // Outer wrapper — sticky + paddingBottom creates scroll distance for stacking
     <div
       ref={ref}
       style={{
@@ -79,83 +145,19 @@ const PlaysOutCardDesktop = forwardRef<
         top: stickyTop,
         zIndex: 20 + index,
         // Short scroll distance — next card appears quickly
-        paddingBottom: '25vh',
+        paddingBottom: '10vh',
       }}
     >
       <div
-        className="w-full max-w-350 mx-auto flex overflow-hidden shadow-2xl relative"
+        className="w-full mx-auto grid grid-cols-2 box-border relative px-[42px] gap-[22px]"
         style={{
-          // Cards are now shorter to let the layout breathe
-          height: '75vh',
-          background: '#0B2232',
-          borderRadius: 40,
+          height: 'calc(100vh - 296px)',
         }}
       >
-        {/* Yellow Button */}
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className={`absolute bottom-10 ${imageRight ? 'left-10' : 'right-10'} z-30 w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110`}
-          style={{ background: '#F5C518', cursor: 'pointer' }}
-        >
-          <motion.span
-            animate={{ rotate: isExpanded ? 45 : 0 }}
-            className="text-4xl text-[#0B2232] font-avenir-heavy leading-none"
-            style={{ marginTop: -4 }}
-          >
-            +
-          </motion.span>
-        </button>
-
         {imageRight ? (
           <>
-            <div
-              className="relative flex flex-col justify-center px-16 xl:px-20 overflow-hidden"
-              style={{ width: '50%', flexShrink: 0 }}
-            >
-                <div className="relative w-full">
-                  {/* Title and Subtitle Group - This moves as one unit */}
-                  <motion.div
-                    animate={{ y: isExpanded ? -120 : 0 }}
-                    transition={{ duration: 0.6, ease: 'easeInOut' }}
-                  >
-                    <h3
-                      className="font-avenir-medium text-white leading-tight mb-4"
-                      style={{ fontSize: '45.74px' }}
-                    >
-                      {card.title}
-                    </h3>
-
-                    {/* Subtitle / Yellow Painting area */}
-                    <div className="relative mb-8" style={{ minHeight: '60px' }}>
-                      <PaintingText text={card.subtitle} isExpanded={isExpanded} />
-                    </div>
-                  </motion.div>
-
-                  {/* Body Content - Absolute positioned so it doesn't affect initial justify-center */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-                    animate={{
-                      opacity: isExpanded ? 1 : 0,
-                      y: isExpanded ? -100 : 20,
-                      filter: isExpanded ? 'blur(0px)' : 'blur(10px)',
-                    }}
-                    transition={{ duration: 0.6, delay: isExpanded ? 0.3 : 0, ease: 'easeInOut' }}
-                    className="absolute top-full left-0 w-full space-y-4"
-                    style={{ pointerEvents: isExpanded ? 'auto' : 'none' }}
-                  >
-                    {card.expandedBody.split('\n').map((line, idx) => (
-                      <p
-                        key={idx}
-                        className="font-avenir-regular text-white leading-relaxed"
-                        style={{ fontSize: '18px', opacity: 0.8 }}
-                      >
-                        {line}
-                      </p>
-                    ))}
-                  </motion.div>
-                </div>
-            </div>
-            <div className="flex-1 overflow-hidden" style={{ minWidth: 0 }}>
+            {textContainerJSX}
+            <div className="overflow-hidden shadow-2xl relative" style={{ borderRadius: 40 }}>
               <img
                 src={card.image}
                 alt={card.title}
@@ -167,7 +169,7 @@ const PlaysOutCardDesktop = forwardRef<
           </>
         ) : (
           <>
-            <div className="flex-1 overflow-hidden" style={{ minWidth: 0 }}>
+            <div className="overflow-hidden shadow-2xl relative" style={{ borderRadius: 40 }}>
               <img
                 src={card.image}
                 alt={card.title}
@@ -176,53 +178,7 @@ const PlaysOutCardDesktop = forwardRef<
                 style={{ display: 'block' }}
               />
             </div>
-            <div
-              className="relative flex flex-col justify-center px-16 xl:px-20 overflow-hidden"
-              style={{ width: '50%', flexShrink: 0 }}
-            >
-                <div className="relative w-full">
-                  {/* Title and Subtitle Group - This moves as one unit */}
-                  <motion.div
-                    animate={{ y: isExpanded ? -120 : 0 }}
-                    transition={{ duration: 0.6, ease: 'easeInOut' }}
-                  >
-                    <h3
-                      className="font-avenir-medium text-white leading-tight mb-4"
-                      style={{ fontSize: '45.74px' }}
-                    >
-                      {card.title}
-                    </h3>
-
-                    {/* Subtitle / Yellow Painting area */}
-                    <div className="relative mb-8" style={{ minHeight: '60px' }}>
-                      <PaintingText text={card.subtitle} isExpanded={isExpanded} />
-                    </div>
-                  </motion.div>
-
-                  {/* Body Content - Absolute positioned so it doesn't affect initial justify-center */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-                    animate={{
-                      opacity: isExpanded ? 1 : 0,
-                      y: isExpanded ? -100 : 20,
-                      filter: isExpanded ? 'blur(0px)' : 'blur(10px)',
-                    }}
-                    transition={{ duration: 0.6, delay: isExpanded ? 0.3 : 0, ease: 'easeInOut' }}
-                    className="absolute top-full left-0 w-full space-y-4"
-                    style={{ pointerEvents: isExpanded ? 'auto' : 'none' }}
-                  >
-                    {card.expandedBody.split('\n').map((line, idx) => (
-                      <p
-                        key={idx}
-                        className="font-avenir-regular text-white leading-relaxed"
-                        style={{ fontSize: '18px', opacity: 0.8 }}
-                      >
-                        {line}
-                      </p>
-                    ))}
-                  </motion.div>
-                </div>
-            </div>
+            {textContainerJSX}
           </>
         )}
       </div>
@@ -238,16 +194,6 @@ const MemoizedPlaysOutCard = memo(PlaysOutCardDesktop)
 export default function PlaysOutDesktop() {
   const containerRef = useRef<HTMLDivElement>(null)
   
-  // High performance scroll tracking without triggering re-renders
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["end end", "end start"]
-  })
-
-  // Smoothly move the title out as we reach the end of the section
-  const titleY = useTransform(scrollYProgress, [0.8, 1], [0, -200])
-  const smoothTitleY = useSpring(titleY, { stiffness: 100, damping: 30, restDelta: 0.001 })
-
   return (
     <section
       ref={containerRef}
@@ -258,14 +204,14 @@ export default function PlaysOutDesktop() {
 
       {/* ── Sticky "Here's how that plays out:" divider ──────────── */}
       <motion.div
-        className="sticky z-10 py-5 px-6 md:px-10 lg:px-16"
-        style={{ top: 0, background: '#EEE9DE', y: smoothTitleY }}
+        className="sticky top-0 z-10 py-5 px-6 md:px-10 lg:px-16"
+        style={{ background: '#EEE9DE', y: 0 }}
       >
         <div className="flex items-center gap-5">
           <div className="flex-1 h-px" style={{ background: 'rgba(7,12,23,0.12)' }} />
           <p
             className="font-avenir-heavy shrink-0"
-            style={{ color: '#070c17', fontSize: '35px' }}
+            style={{ color: '#070c17', fontSize: 'clamp(35px, 2.5vw, 45px)' }}
           >
             Here&apos;s how that plays out:
           </p>
@@ -274,8 +220,7 @@ export default function PlaysOutDesktop() {
       </motion.div>
 
       {/* ── Stacking full-screen cards ────────────────────────────── */}
-      {/* Padding so cards don't touch the page edges */}
-      <div className="px-6 md:px-10 lg:px-14">
+      <div className="w-full">
         {CARDS.map((card, i) => (
           <MemoizedPlaysOutCard
             key={i}
@@ -286,8 +231,8 @@ export default function PlaysOutDesktop() {
         ))}
       </div>
 
-      {/* Bottom spacer minimized to respect existing 178px div */}
-      <div style={{ height: 0 }} />
+      {/* Spacer to allow the final card to sit before section ends */}
+      <div className="relative" style={{ height: 0 }} />
     </section>
   )
 }

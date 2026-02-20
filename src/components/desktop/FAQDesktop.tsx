@@ -106,8 +106,7 @@ function TitleBlock({ active }: { active: boolean }) {
   )
 }
 
-// Vertical distance between the center title and its ghost copies
-const GHOST_OFFSET = 160 // px
+
 
 interface FAQDesktopProps {
   onLastFAQVisible?: (visible: boolean) => void
@@ -142,53 +141,26 @@ export default function FAQDesktop({ onLastFAQVisible }: FAQDesktopProps) {
       style={{ background: '#F8F9FA' }}
     >
       <div
-        className="absolute top-0 left-0 w-100 h-125 bg-[#FBD979]/10 rounded-full blur-[100px]"
+        className="absolute top-0 left-0 w-100 h-125 bg-[#FBD979]/10 rounded-full blur-[100px] z-0"
         style={{ transform: 'translate(-40%, -10%)' }}
       />
 
-      <div className="flex gap-24 relative pt-[10vh]">
-        {/* ── Left column — sticky h-screen, 3 fixed ghost copies ───────── */}
+      <div className="flex gap-24 relative pt-[10vh] z-10">
+        {/* ── Left column — sticky ───────── */}
         <div className="w-[45%] relative">
           <div
             className="sticky"
             style={{
-              top: 0,
-              height: '100vh',
-              overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'center',
+              top: '10vh',
             }}
           >
-            {/* Ghost above */}
-            <div
-              className="absolute pointer-events-none select-none"
-              style={{ bottom: `calc(50% + ${GHOST_OFFSET}px)` }}
-            >
-              <TitleBlock active={false} />
-            </div>
-
-            {/* Center — always focused */}
-            <div
-              className="absolute"
-              style={{ top: '50%', transform: 'translateY(-50%)' }}
-            >
-              <TitleBlock active={true} />
-            </div>
-
-            {/* Ghost below */}
-            <div
-              className="absolute pointer-events-none select-none"
-              style={{ top: `calc(50% + ${GHOST_OFFSET}px)` }}
-            >
-              <TitleBlock active={false} />
-            </div>
+            <TitleBlock active={true} />
           </div>
         </div>
 
         {/* ── Right column — FAQ items ──────────────────────────────────── */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col relative">
           {/* Small top padding for breathing room */}
-          <div style={{ height: '6vh' }} />
 
           <div className="flex flex-col gap-4">
             {ALL_FAQS.slice(0, 6).map((item, i) => (
@@ -197,7 +169,7 @@ export default function FAQDesktop({ onLastFAQVisible }: FAQDesktopProps) {
           </div>
 
           {!showMore ? (
-            <div className="mt-4 mb-[35vh] flex justify-center">
+            <div className="mt-6 flex justify-center">
               <motion.button
                 onClick={() => setShowMore(true)}
                 className="flex items-center gap-3 font-avenir-medium text-xl text-[#9096b5] hover:gap-5 transition-all bg-transparent border-none p-0 cursor-pointer"
@@ -224,12 +196,12 @@ export default function FAQDesktop({ onLastFAQVisible }: FAQDesktopProps) {
           )}
           
           {/* Sensor for the last question */}
-          <div ref={endRef} className="h-4 w-full" />
+          <div ref={endRef} />
         </div>
       </div>
 
-      {/* Persistent space below the FAQs - Reduced for tighter transition to CTA */}
-      <div style={{ height: '4vh' }} />
+      {/* Persistent space below the FAQs */}
+      <div style={{ height: showMore ? '10vh' : '35vh' }} />
     </section>
   )
 }

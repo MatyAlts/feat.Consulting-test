@@ -1,25 +1,23 @@
-import { useRef, forwardRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 
 const CARDS = [
   {
     image: '/assets_mobile/investor_desktop1.png',
-    titleSegments: [
-      { text: "You’ll understand how investment decisions are formed ", fontClass: 'font-dm-regular' },
-      { text: "(not just chosen)", fontClass: 'font-dm-thin' },
-    ],
+    title: "You see how investment decisions are formed",
+    subtitle: "(not just chosen)",
+    preview: "You’ll recognize how real decisions come together: how uncertainty is handled, tradeoffs are weighed, and conviction is built before anyone commits.",
     highlights: [
       'ambiguity is handled before certainty exists',
       'disagreement is surfaced and worked through',
       'tradeoffs are weighed before anyone commits',
     ],
-    body: 'In real time, you’ll see how experienced investors reason as decisions are forming, not after the fact.\n\nThere’s no single “right answer.” Just better and worse reasoning under pressure.\n\nBy the end, you have a clear mental model of how conviction is built when information is incomplete and how to apply that thinking yourself.',
+    body: 'You’ll see how experienced investors reason as **decisions are forming**, not after the fact.\n\nIn real time, you observe how:\n\nThere’s no single “right answer.” Just better and worse reasoning under pressure.\n\nBy the end, you have a **clear mental model** of how conviction is built when information is incomplete and how to apply that thinking yourself.',
   },
   {
     image: '/assets_mobile/investor_desktop2.png',
-    titleSegments: [
-      { text: "You stop confusing great businesses with great investments", fontClass: 'font-dm-regular' },
-    ],
+    title: "You stop confusing great businesses with great investments",
+    preview: "You’ll be able to tell when a strong company is not necessarily a good investment; and how the right structure, timing, and context can make it one.",
     highlights: [
       'business or product quality',
       'from valuation, terms, timing, and risk',
@@ -28,10 +26,9 @@ const CARDS = [
   },
   {
     image: '/assets_mobile/investor_desktop3.png',
-    titleSegments: [
-      { text: "You don’t just learn investing.", fontClass: 'font-dm-thin' },
-      { text: "You become an investor.", fontClass: 'font-dm-regular', block: true },
-    ],
+    title: "You become an investor.",
+    subtitle: "You don’t just learn investing.",
+    preview: "Not by watching, but by deciding. You’ll commit when it counts, see outcomes play out, and carry that judgment forward.",
     highlights: [
       'evaluate live opportunities',
       'debate decisions with peers',
@@ -42,108 +39,145 @@ const CARDS = [
   },
 ]
 
-const STACK_OFFSET = 12
-const TITLE_OFFSET = 80
-
-const InvestorCard = forwardRef<
-  HTMLDivElement,
-  { card: (typeof CARDS)[0]; index: number; imageRight: boolean }
->(({ card, index, imageRight }, ref) => {
-  const stickyTop = TITLE_OFFSET + index * STACK_OFFSET
-
-  const textPanel = (
-    <div
-      className="relative flex flex-col justify-start py-12 xl:py-16 px-16 xl:px-20 overflow-hidden"
-      style={{ width: '50%', flexShrink: 0 }}
-    >
-      <h3
-        className="text-white leading-tight mb-4"
-        style={{ fontSize: 'clamp(1.8rem, 2.5vw, 2.4rem)' }}
-      >
-        {card.titleSegments.map((seg: any, i: number) => (
-          <span 
-            key={i} 
-            className={`${seg.fontClass} ${seg.block ? 'block mt-2' : ''}`}
-          >
-            {seg.text}
-          </span>
-        ))}
-      </h3>
-
-      <div className="flex flex-col gap-2.5 mb-6">
-        {card.highlights.map((item, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <div className="mt-2 w-1.5 h-1.5 rounded-full bg-[#FBD979] shrink-0" />
-            <p className="font-avenir-medium text-[#FBD979]/90 text-lg italic leading-snug">
-              {item}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      <div
-        className="mb-6"
-        style={{ width: 60, height: 1, background: 'rgba(255,255,255,0.15)' }}
-      />
-
-      {card.body.split('\n\n').map((para, i) => (
-        <p
-          key={i}
-          className="font-avenir-regular leading-relaxed mb-3 last:mb-0"
-          style={{ color: 'rgba(255,255,255,0.65)', fontSize: '1rem' }}
-        >
-          {para}
-        </p>
-      ))}
-    </div>
-  )
-
-  const imagePanel = (
-    <div className="flex-1 overflow-hidden" style={{ minWidth: 0 }}>
-      <img
-        src={card.image}
-        alt={card.titleSegments.map((s: any) => s.text).join(' ')}
-        className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-        loading="lazy"
-      />
-    </div>
-  )
+function InvestorCard({ card, index, imageRight }: { card: (typeof CARDS)[0]; index: number; imageRight: boolean }) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      style={{
-        position: 'sticky',
-        top: stickyTop,
-        zIndex: 20 + index,
-        paddingBottom: '10vh',
+      layout
+      transition={{ 
+        layout: { type: 'spring', stiffness: 150, damping: 25 },
+        opacity: { duration: 0.6 }
       }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      className="relative w-full bg-[#12141D] rounded-[40px] mb-20 border border-white/5 shadow-2xl overflow-visible"
     >
-      <div
-        className="w-full max-w-350 mx-auto flex overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5"
-        style={{
-          height: '80vh',
-          background: '#0d1a2c',
-          borderRadius: 40,
-        }}
-      >
-        {imageRight ? (
-          <>
-            {textPanel}
-            {imagePanel}
-          </>
-        ) : (
-          <>
-            {imagePanel}
-            {textPanel}
-          </>
-        )}
-      </div>
-    </div>
-  )
-})
+      <div className={`flex flex-col lg:flex-row items-start ${imageRight ? 'lg:flex-row-reverse' : ''}`}>
+        {/* Image Container — Padded: 20px top, 20px outer side, 28px gap to text, 0px bottom (protrudes) */}
+        <div className={`shrink-0 h-0 ${imageRight ? 'pt-5 pr-5 pl-7' : 'pt-5 pl-5 pr-7'}`}>
+          <motion.div
+            layout
+            transition={{ type: 'spring', stiffness: 150, damping: 25 }}
+            className="w-102.5 h-102.5 rounded-4xl overflow-hidden shadow-xl shadow-black/50"
+          >
+            <img
+              src={card.image}
+              alt={card.title}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        </div>
 
-InvestorCard.displayName = 'InvestorCard'
+        {/* Text Container */}
+        <div
+          className={`flex-1 relative pb-17.75 ${index === 2 ? 'pt-[86.53px]' : 'pt-5'}`}
+          style={{
+            paddingLeft: imageRight ? '60px' : '28px',
+            paddingRight: imageRight ? '28px' : '60px'
+          }}
+        >
+          <motion.div layout="position">
+            {index === 2 ? (
+              /* Special layout for 3rd card */
+              <>
+                <h4 className="font-dm-thin text-white text-[50px] mb-0 leading-tight">
+                  {card.subtitle}
+                </h4>
+                <h3 className="text-white leading-[1.1] mb-0 font-dm-regular text-[50px] tracking-tight">
+                  {card.title}
+                </h3>
+              </>
+            ) : (
+              /* Standard layout for 1st and 2nd cards */
+              <>
+                <h3 className="text-white leading-[1.1] mb-0 font-dm-regular text-[50px] tracking-tight">
+                  {card.title}
+                </h3>
+                {card.subtitle && (
+                  <h4 className="font-dm-thin text-white/25 text-[40px] mb-0 leading-tight">
+                    {card.subtitle}
+                  </h4>
+                )}
+              </>
+            )}
+          </motion.div>
+
+          <motion.div layout className="relative mt-1.75 overflow-hidden">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {!isExpanded ? (
+                <motion.p
+                  key="preview"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="m-0 font-avenir-regular text-white/40 text-[25.62px] leading-relaxed"
+                >
+                  {card.preview}
+                </motion.p>
+              ) : (
+                <motion.div
+                  key="body"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-5"
+                >
+                  {card.body.split('\n\n').map((para, i) => {
+                    if (para.startsWith('In real time')) {
+                      return (
+                        <div key={i} className="space-y-3">
+                          <p className="m-0 font-avenir-regular text-white/60 text-[25.62px] leading-relaxed">{para}</p>
+                          <ul className="space-y-2 pl-1">
+                            {card.highlights.map((h, hi) => (
+                              <li key={hi} className="flex items-center gap-3 font-avenir-regular text-white/50 text-[25.62px]">
+                                <span className="w-1 h-1 rounded-full bg-[#fbd979]/50 shrink-0" />
+                                {h}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )
+                    }
+                    
+                    const formattedPara = para.split('**').map((part, pi) => 
+                      pi % 2 === 1 ? <strong key={pi} className="font-avenir-heavy text-white/85">{part}</strong> : part
+                    )
+
+                    return (
+                      <p key={i} className="m-0 font-avenir-regular text-white/45 text-[25.62px] leading-relaxed">
+                        {formattedPara}
+                      </p>
+                    )
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Toggle Button — Yellow, anchored to bottom-right of the text area */}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className={`absolute bottom-5 ${index === 1 ? 'left-5' : 'right-5'} z-30 transition-all hover:scale-110 active:scale-95`}
+          >
+            <motion.span
+              animate={{ rotate: isExpanded ? 45 : 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="text-3xl leading-none block font-avenir-light text-[#fbd979]"
+            >
+              +
+            </motion.span>
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
 
 export default function BecomeTheInvestorDesktop() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -153,10 +187,13 @@ export default function BecomeTheInvestorDesktop() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full py-24"
-      style={{ background: '#1A1C25' }}
+      className="relative w-full py-32"
+      style={{ background: '#0D0F14' }}
     >
-      <div ref={headingRef} className="text-center px-10 mb-20 max-w-5xl mx-auto">
+      <div className="absolute top-[15%] left-[5%] w-64 h-64 bg-[#fbd979]/5 rounded-full blur-[80px] pointer-events-none z-0" />
+      <div className="absolute bottom-[20%] right-[10%] w-80 h-80 bg-[#fbd979]/5 rounded-full blur-[100px] pointer-events-none z-0" />
+      
+      <div ref={headingRef} className="text-center px-10 mb-24 max-w-5xl mx-auto relative z-10">
         <motion.h2 
           className="font-avenir-heavy text-white leading-tight mb-6"
           style={{ fontSize: 'clamp(2.5rem, 5vw, 64px)' }}
@@ -167,7 +204,7 @@ export default function BecomeTheInvestorDesktop() {
           Become the Investor<br />You Were Meant to Be
         </motion.h2>
         <motion.p 
-          className="font-avenir-regular text-white/60 text-2xl"
+          className="font-avenir-regular text-white/50 text-2xl"
           initial={{ opacity: 0, y: 15 }}
           animate={headingInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.1 }}
@@ -176,19 +213,23 @@ export default function BecomeTheInvestorDesktop() {
         </motion.p>
       </div>
 
-      <div className="px-10 xl:px-24">
+      <div className="max-w-310 mx-auto px-10 relative z-10">
         {CARDS.map((card, i) => (
           <InvestorCard 
             key={i} 
             card={card} 
             index={i} 
-            imageRight={i % 2 !== 0} 
+            imageRight={i === 1} 
           />
         ))}
       </div>
 
       {/* Final CTA Assessment Block */}
-      <div className="mt-12 flex justify-center px-10 pb-24">
+      <motion.div 
+        layout 
+        transition={{ layout: { type: 'spring', stiffness: 150, damping: 25 } }} 
+        className="mt-24 flex justify-center px-10 pb-24"
+      >
         <motion.div
            initial={{ opacity: 0, y: 30 }}
            whileInView={{ opacity: 1, y: 0 }}
@@ -221,30 +262,16 @@ export default function BecomeTheInvestorDesktop() {
               variants={{
                 initial: { opacity: 0, scale: 0.98 },
                 animate: { opacity: 1, scale: 1 },
-                hover: { backgroundColor: '#09092c', color: '#ffffff' },
-                tap: { scale: 0.99, backgroundColor: '#09092c', color: '#ffffff' },
+                hover: { backgroundColor: '#ffffff', color: '#0d1a2c' },
+                tap: { scale: 0.99, backgroundColor: '#ffffff', color: '#0d1a2c' },
               }}
               transition={{ duration: 0.25, ease: 'easeInOut' }}
             >
-              <span className="mr-3">See if SIA is right for you</span>
-              <motion.img
-                src="/assets_mobile/flecha.svg"
-                alt=""
-                className="w-4 h-4"
-                variants={{
-                  initial: { filter: 'brightness(0)' },
-                  animate: { filter: 'brightness(0)' },
-                  hover: { filter: 'brightness(0) invert(1)' },
-                  tap: { filter: 'brightness(0) invert(1)' },
-                }}
-              />
+              Take the Assessment
             </motion.a>
-            <p className="mt-[4.9px] font-avenir-light text-white/30 text-sm">
-              No commitment. Just a starting point.
-            </p>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   )
 }

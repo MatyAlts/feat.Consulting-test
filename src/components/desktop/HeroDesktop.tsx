@@ -22,8 +22,11 @@ export default function HeroDesktop() {
 
       {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section className="relative flex flex-col overflow-hidden bg-white">
+        {/* Solid white underlay to block shapes during load */}
+        <div className="absolute inset-0 bg-white" style={{ zIndex: 9 }} />
+
         {/* Background image */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-10">
           <img
             src="/assets_mobile/BG_sin_opacidad.png"
             alt=""
@@ -37,7 +40,7 @@ export default function HeroDesktop() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center w-full text-center mx-auto px-6 pt-14 md:pt-16 lg:pt-20 max-w-3xl lg:max-w-4xl">
+        <div className="relative z-20 flex flex-col items-center w-full text-center mx-auto px-6 pt-14 md:pt-16 lg:pt-20 max-w-3xl lg:max-w-4xl">
 
           {/* Pill badge */}
           <motion.div
@@ -200,22 +203,38 @@ export default function HeroDesktop() {
 
             {/* Stacked avatars */}
             <div className="flex mt-1">
-              {INVESTORS.map((src, i) => (
-                <img
-                  key={i}
-                  src={src}
-                  alt={`Investor ${i + 1}`}
-                  className="rounded-full border-2 border-white object-cover"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    marginLeft: i === 0 ? 0 : -12,
-                    zIndex: i,
-                    position: 'relative',
-                  }}
-                  loading="lazy"
-                />
-              ))}
+              {INVESTORS.map((src, i) => {
+                const hoverAnim = [
+                  { scale: 1.25, rotate: -6, y: -4, zIndex: 20 },
+                  { scale: 1.25, rotate: 5, y: -6, zIndex: 20 },
+                  { scale: 1.25, rotate: -3, y: -2, zIndex: 20 },
+                  { scale: 1.25, rotate: 4, y: -5, zIndex: 20 },
+                  { scale: 1.25, rotate: -8, y: -3, zIndex: 20 },
+                  { scale: 1.25, rotate: 3, y: -7, zIndex: 20 },
+                  { scale: 1.25, rotate: -4, y: -4, zIndex: 20 },
+                  { scale: 1.25, rotate: 7, y: -5, zIndex: 20 },
+                  { scale: 1.25, rotate: -5, y: -3, zIndex: 20 },
+                ][i % 9];
+
+                return (
+                  <motion.img
+                    key={i}
+                    src={src}
+                    alt={`Investor ${i + 1}`}
+                    className="rounded-full border-2 border-white object-cover cursor-pointer"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      marginLeft: i === 0 ? 0 : -12,
+                      zIndex: i,
+                      position: 'relative',
+                    }}
+                    whileHover={hoverAnim}
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                    loading="lazy"
+                  />
+                );
+              })}
             </div>
           </motion.div>
         </div>
