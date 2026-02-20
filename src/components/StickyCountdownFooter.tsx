@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useCountdown } from '../hooks/useCountdown'
 import { useScrollDirection } from '../hooks/useScrollDirection'
 

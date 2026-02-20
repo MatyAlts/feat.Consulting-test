@@ -287,8 +287,7 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
     return () => clearInterval(timer)
   }, [inView, isPaused, current, selectedReviewPopup])
 
-  // Returns index with wrapping
-  const wrap = (i: number) => ((i % n) + n) % n
+
 
   // Card positions: -1 = left peek, 0 = center, 1 = right peek
   const getOffset = (i: number) => {
