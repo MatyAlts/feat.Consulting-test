@@ -201,7 +201,7 @@ export default function FAQDesktop({ onLastFAQVisible }: FAQDesktopProps) {
       </div>
 
       {/* Persistent space below the FAQs */}
-      <div style={{ height: showMore ? '10vh' : '35vh' }} />
+      <div className="pb-24" />
     </section>
   )
 }

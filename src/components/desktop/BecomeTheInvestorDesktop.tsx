@@ -249,11 +249,13 @@ export default function BecomeTheInvestorDesktop() {
               href={import.meta.env.VITE_APPLY_URL || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full font-avenir-heavy text-[#0d1a2c] flex items-center justify-center rounded-2xl py-5 text-xl group shadow-lg"
+              className="w-full font-avenir-medium text-[#0d1a2c] flex items-center justify-center rounded-2xl group shadow-lg"
               style={{
                 backgroundColor: '#fbd979',
                 border: '1.5px solid #fbd979',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                fontSize: '20.83px',
+                height: '69px'
               }}
               initial="initial"
               animate="animate"
@@ -267,7 +269,18 @@ export default function BecomeTheInvestorDesktop() {
               }}
               transition={{ duration: 0.25, ease: 'easeInOut' }}
             >
-              Take the Assessment
+              <span className="mr-2">See if SIA is right for you</span>
+              <motion.img 
+                src="/assets_mobile/flecha.svg" 
+                alt="" 
+                className="w-[8.5px] h-[8.5px]"
+                variants={{
+                  initial: { filter: 'brightness(0) invert(0)' },
+                  animate: { filter: 'brightness(0) invert(0)' },
+                  hover: { filter: 'brightness(0) invert(0)' },
+                  tap: { filter: 'brightness(0) invert(0)' },
+                }}
+              />
             </motion.a>
           </div>
         </motion.div>

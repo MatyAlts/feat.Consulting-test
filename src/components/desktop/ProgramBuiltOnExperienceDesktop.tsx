@@ -81,7 +81,9 @@ export default function ProgramBuiltOnExperienceDesktop() {
       className="w-full py-24 px-10 xl:px-24"
       style={{ background: '#EEE9DE' }}
     >
-      <div className="max-w-350 mx-auto">
+      <div className="max-w-350 mx-auto relative z-10">
+        <div className="absolute -right-24 top-1/4 w-80 h-100 bg-[#fbd979]/15 rounded-full blur-[100px] pointer-events-none -z-10" />
+        <div className="absolute -left-24 bottom-1/4 w-64 h-80 bg-[#fbd979]/10 rounded-full blur-[80px] pointer-events-none -z-10" />
         
         {/* Header Row */}
         <div className="flex flex-col lg:flex-row justify-between items-end mb-16 gap-8">
