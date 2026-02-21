@@ -115,8 +115,6 @@ interface FAQDesktopProps {
 export default function FAQDesktop({ onLastFAQVisible }: FAQDesktopProps) {
   const [showMore, setShowMore] = useState(false)
 
-  const g2Ref = useRef<HTMLDivElement>(null)
-  const g3Ref = useRef<HTMLDivElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
@@ -209,7 +207,7 @@ export default function FAQDesktop({ onLastFAQVisible }: FAQDesktopProps) {
               </>
             ) : (
               <div className="flex flex-col gap-4 mt-4">
-                <div ref={g3Ref} className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4">
                   {/* Final 4 FAQs */}
                   {ALL_FAQS.slice(14, 18).map((item, i) => (
                     <FAQItemDesktop key={i + 14} item={item} />

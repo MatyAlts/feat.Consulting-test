@@ -295,7 +295,7 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
     if (!inView || isPaused || expandedReviewIndex !== null) return
     const timer = setInterval(next, 5000)
     return () => clearInterval(timer)
-  }, [inView, isPaused, current, expandedReviewIndex])
+  }, [inView, isPaused, current, expandedReviewIndex, next])
 
 
 
