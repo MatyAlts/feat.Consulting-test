@@ -137,7 +137,7 @@ export default function FAQDesktop({ onLastFAQVisible }: FAQDesktopProps) {
 
   return (
     <section
-      className="relative w-full px-10 xl:px-24 flex flex-col overflow-clip"
+      className="relative w-full px-10 xl:px-24 flex flex-col py-[224px]"
       style={{ background: '#F8F9FA' }}
     >
       <div
@@ -145,63 +145,84 @@ export default function FAQDesktop({ onLastFAQVisible }: FAQDesktopProps) {
         style={{ transform: 'translate(-40%, -10%)' }}
       />
 
-      <div className="flex gap-24 relative pt-[10vh] z-10">
-        {/* ── Left column — sticky ───────── */}
-        <div className="w-[45%] relative">
-          <div
-            className="sticky"
-            style={{
-              top: '10vh',
-            }}
-          >
-            <TitleBlock active={true} />
+      <div className="relative z-10 flex flex-col gap-0">
+        {/* Territory for the sticky title */}
+        <div className="flex gap-24 relative">
+          {/* ── Left column — sticky ───────── */}
+          <div className="w-[45%] relative">
+            <div
+              className="sticky"
+              style={{
+                top: '10vh',
+              }}
+            >
+              <TitleBlock active={true} />
+            </div>
+          </div>
+
+          {/* ── Right column — FAQ items that pull the sticky title ────────── */}
+          <div className="flex-1 flex flex-col relative pb-4">
+            <div className="flex flex-col gap-4">
+              {/* Always sticky: first 3 FAQs */}
+              {ALL_FAQS.slice(0, 3).map((item, i) => (
+                <FAQItemDesktop key={i} item={item} />
+              ))}
+              
+              {/* Conditionally sticky territory: FAQs 4 to 14 */}
+              {showMore && (
+                <div className="flex flex-col gap-4">
+                  {ALL_FAQS.slice(3, 14).map((item, i) => (
+                    <FAQItemDesktop key={i + 3} item={item} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* ── Right column — FAQ items ──────────────────────────────────── */}
-        <div className="flex-1 flex flex-col relative">
-          {/* Small top padding for breathing room */}
+        {/* Second section — Non-sticky FAQs (Title will no longer follow here) */}
+        <div className="flex gap-24 relative">
+          {/* Empty spacer for the left side */}
+          <div className="w-[45%]" />
 
-          <div className="flex flex-col gap-4">
-            {ALL_FAQS.slice(0, 6).map((item, i) => (
-              <FAQItemDesktop key={i} item={item} />
-            ))}
+          {/* Remaining content */}
+          <div className="flex-1 flex flex-col relative">
+            {!showMore ? (
+              <>
+                <div className="flex flex-col gap-4">
+                  {/* FAQs 4 to 6 are here when not expanded so they don't pull the title */}
+                  {ALL_FAQS.slice(3, 6).map((item, i) => (
+                    <FAQItemDesktop key={i + 3} item={item} />
+                  ))}
+                </div>
+                <div className="mt-6 flex justify-center">
+                  <motion.button
+                    onClick={() => setShowMore(true)}
+                    className="flex items-center gap-3 font-avenir-medium text-xl text-[#9096b5] hover:gap-5 transition-all bg-transparent border-none p-0 cursor-pointer"
+                  >
+                    See more
+                    <svg width="18" height="10" viewBox="0 0 14 8" fill="none">
+                      <path d="M1 1L7 7L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </motion.button>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col gap-4 mt-4">
+                <div ref={g3Ref} className="flex flex-col gap-4">
+                  {/* Final 4 FAQs */}
+                  {ALL_FAQS.slice(14, 18).map((item, i) => (
+                    <FAQItemDesktop key={i + 14} item={item} />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Sensor for the last question */}
+            <div ref={endRef} />
           </div>
-
-          {!showMore ? (
-            <div className="mt-6 flex justify-center">
-              <motion.button
-                onClick={() => setShowMore(true)}
-                className="flex items-center gap-3 font-avenir-medium text-xl text-[#9096b5] hover:gap-5 transition-all bg-transparent border-none p-0 cursor-pointer"
-              >
-                See more
-                <svg width="18" height="10" viewBox="0 0 14 8" fill="none">
-                  <path d="M1 1L7 7L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </motion.button>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4 mt-4">
-              <div ref={g2Ref} className="flex flex-col gap-4">
-                {ALL_FAQS.slice(6, 12).map((item, i) => (
-                  <FAQItemDesktop key={i + 6} item={item} />
-                ))}
-              </div>
-              <div ref={g3Ref} className="flex flex-col gap-4">
-                {ALL_FAQS.slice(12, 18).map((item, i) => (
-                  <FAQItemDesktop key={i + 12} item={item} />
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {/* Sensor for the last question */}
-          <div ref={endRef} />
         </div>
       </div>
-
-      {/* Persistent space below the FAQs */}
-      <div className="pb-24" />
     </section>
   )
 }

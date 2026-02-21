@@ -272,20 +272,30 @@ export default function ProgramBuiltOnExperienceDesktop() {
 function BackedByPeopleSlider({ inView }: { inView: boolean }) {
   const [current, setCurrent] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
-  const [selectedReviewPopup, setSelectedReviewPopup] = useState<number | null>(null)
+  const [expandedReviewIndex, setExpandedReviewIndex] = useState<number | null>(null)
   
   const titleRef = useRef(null)
   const titleInView = useInView(titleRef, { once: true, margin: '-50px' })
 
   const n = REVIEWS.length
-  const next = () => setCurrent((c) => (c + 1) % n)
-  const goTo = (i: number) => setCurrent(i)
+  const next = () => {
+    setCurrent((c) => (c + 1) % n);
+    setExpandedReviewIndex(null);
+  }
+  const prev = () => {
+    setCurrent((c) => (c - 1 + n) % n);
+    setExpandedReviewIndex(null);
+  }
+  const goTo = (i: number) => {
+    setCurrent(i);
+    setExpandedReviewIndex(null);
+  }
 
   useEffect(() => {
-    if (!inView || isPaused || selectedReviewPopup !== null) return
+    if (!inView || isPaused || expandedReviewIndex !== null) return
     const timer = setInterval(next, 5000)
     return () => clearInterval(timer)
-  }, [inView, isPaused, current, selectedReviewPopup])
+  }, [inView, isPaused, current, expandedReviewIndex])
 
 
 
@@ -301,18 +311,18 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
   return (
     <div className="mt-32">
       {/* Header Row */}
-      <div className="flex justify-end mb-16">
-        <div className="text-right flex flex-col items-end">
+      <div className="flex justify-center mb-16">
+        <div className="text-center flex flex-col items-center">
           <h2
             ref={titleRef}
             className="font-avenir-heavy text-[#0d1a2c] leading-tight"
             style={{ fontSize: 'clamp(2.5rem, 4vw, 56px)', maxWidth: '850px' }}
           >
-            <div className="flex flex-wrap justify-end">
+            <div className="flex flex-wrap justify-center">
               {["… and", "Backed", "by", "People"].map((word, i) => (
                 <motion.span
                   key={`rev-line1-${i}`}
-                  className="inline-block ml-[0.3em]"
+                  className="inline-block mx-[0.15em]"
                   initial={{ opacity: 0, y: 20 }}
                   animate={titleInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
@@ -321,11 +331,11 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
                 </motion.span>
               ))}
             </div>
-            <div className="flex flex-wrap justify-end">
+            <div className="flex flex-wrap justify-center">
               {["Who", "Do", "This", "for", "Real"].map((word, i) => (
                 <motion.span
                   key={`rev-line2-${i}`}
-                  className="inline-block ml-[0.3em]"
+                  className="inline-block mx-[0.15em]"
                   initial={{ opacity: 0, y: 20 }}
                   animate={titleInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: (i + 4) * 0.1 }}
@@ -336,7 +346,7 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
             </div>
           </h2>
           <motion.p
-            className="font-avenir-regular text-[#0d1a2c]/70 text-lg lg:text-xl max-w-125 lg:mb-2 mt-4"
+            className="font-avenir-regular text-[#0d1a2c]/70 text-lg lg:text-xl max-w-125 mt-4"
             initial={{ opacity: 0, y: 10 }}
             animate={titleInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -348,8 +358,8 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
 
       {/* Carousel */}
       <div
-        className="relative overflow-hidden"
-        style={{ height: '480px' }}
+        className="relative"
+        style={{ height: '500px' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -365,34 +375,42 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
           return (
             <motion.div
               key={i}
-              className="absolute top-0 flex flex-col items-center justify-center rounded-[32px] shadow-xl p-8 cursor-pointer"
+              layout
+              className="absolute top-0 flex flex-col items-center justify-center rounded-[50px] shadow-[0px_4px_24px_rgba(0,0,0,0.1)] p-0 cursor-pointer overflow-hidden"
               style={{
-                width: isCenter ? '46%' : '28%',
-                height: isCenter ? '100%' : '88%',
-                top: isCenter ? '0%' : '6%',
+                width: isCenter ? '80%' : '30%',
+                maxWidth: isCenter ? '1142px' : '360px',
+                height: isCenter ? (expandedReviewIndex === i ? 'auto' : '482px') : '400px',
+                minHeight: isCenter ? '482px' : '400px',
+                top: isCenter ? (expandedReviewIndex === i ? '-20px' : '0') : '41px',
                 background: '#ffffff',
-                zIndex: isCenter ? 10 : 5,
-                filter: isCenter ? 'none' : 'brightness(0.75) saturate(0.5)',
+                zIndex: isCenter ? 20 : 5,
+                filter: isCenter ? 'none' : 'brightness(0.9) grayscale(0.2)',
               }}
               animate={{
-                opacity: isCenter ? 1 : 0.7,
-                scale: isCenter ? 1 : 0.95,
-                left: isLeft ? '2%' : isCenter ? '27%' : isRight ? '70%' : '27%',
+                opacity: isCenter ? 1 : 0.6,
+                scale: isCenter ? 1 : 0.9,
+                left: isLeft ? '-15%' : isCenter ? '10%' : isRight ? '89%' : '10%',
               }}
               transition={{ 
                 duration: 0.8, 
-                ease: [0.16, 1, 0.3, 1] // Custom quintic ease for ultra-smooth feel
+                ease: [0.16, 1, 0.3, 1]
               }}
-              onClick={() => !isCenter && goTo(i)}
+              onClick={() => {
+                if (!isCenter) {
+                  goTo(i);
+                  setExpandedReviewIndex(null);
+                }
+              }}
             >
-              <div className="flex-1 flex flex-col items-center justify-center text-center mt-4">
+              <div className={isCenter ? "flex flex-row items-center w-full h-full gap-12 px-16 py-12 relative" : "flex flex-col items-center justify-center h-full"}>
                 {/* Avatar circle */}
-                <div
-                  className="rounded-full overflow-hidden shadow-md mx-auto mb-8"
+                <motion.div
+                  layout
+                  className={`rounded-full overflow-hidden shadow-md flex-none ${isCenter ? 'border-[3px] border-[#C7A45A]' : ''}`}
                   style={{
-                    width: isCenter ? 180 : 120,
-                    height: isCenter ? 180 : 120,
-                    flexShrink: 0,
+                    width: isCenter ? 300 : 160,
+                    height: isCenter ? 300 : 160,
                   }}
                 >
                   <img
@@ -400,147 +418,151 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
                     alt={review.name}
                     className="w-full h-full object-cover"
                   />
-                </div>
+                </motion.div>
 
-                {/* Content - strictly Name and Role */}
-                <p
-                  className="font-avenir-heavy text-[#0d1a2c]"
-                  style={{ fontSize: isCenter ? '28px' : '20px' }}
-                >
-                  {review.name}
-                </p>
-                <p
-                  className="font-avenir-regular text-[#0d1a2c]/70 leading-snug mt-2"
-                  style={{ fontSize: isCenter ? '18px' : '14px', maxWidth: '85%' }}
-                >
-                  {review.role}
-                </p>
+                {isCenter ? (
+                  <div className="flex-1 text-left flex flex-col h-full py-4">
+                    <motion.h3 layout className="font-avenir-heavy text-[#3c3c3c] text-[32px] leading-[1.11] mb-[17px]">
+                      {review.quote}
+                    </motion.h3>
+                    <motion.div 
+                      layout
+                      initial={false}
+                      className="mb-8 relative"
+                    >
+                      <AnimatePresence mode="wait">
+                        {expandedReviewIndex === i ? (
+                          <motion.p
+                            key="full"
+                            initial={{ opacity: 0, filter: 'blur(10px)', y: 5 }}
+                            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+                            exit={{ opacity: 0, filter: 'blur(10px)', y: -5 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            className="font-avenir-regular text-[#525870] text-[20px] leading-[1.4]"
+                          >
+                            {review.body}
+                          </motion.p>
+                        ) : (
+                          <motion.p
+                            key="short"
+                            initial={{ opacity: 0, filter: 'blur(10px)' }}
+                            animate={{ opacity: 1, filter: 'blur(0px)' }}
+                            exit={{ opacity: 0, filter: 'blur(10px)' }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="font-avenir-regular text-[#525870] text-[20px] leading-[1.4] line-clamp-2 overflow-hidden text-ellipsis"
+                          >
+                            {review.body}
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                    <motion.div layout className="mt-auto">
+                      <p className="font-avenir-medium text-[#3c3c3c] text-[16px] leading-[1.123]">— {review.name}</p>
+                      <p className="font-avenir-heavy text-[#3c3c3c] text-[16px] leading-[1.123]">{review.role}</p>
+                    </motion.div>
+                  </div>
+                ) : (
+                  <div className="mt-6 text-center opacity-40">
+                    <p className="font-avenir-heavy text-[#0d1a2c] text-lg">{review.name}</p>
+                  </div>
+                )}
+
+                {/* Bottom right "+" / "-" */}
+                {isCenter && (
+                  <div className="absolute bottom-8 right-8 z-50">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setExpandedReviewIndex(expandedReviewIndex === i ? null : i);
+                      }}
+                      className="flex items-center justify-center rounded-full text-white font-avenir-light transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer bg-[#0d1a2c]"
+                      style={{ 
+                        width: 65, 
+                        height: 65, 
+                        fontSize: '44px', 
+                        lineHeight: 1,
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                      }}
+                    >
+                      <motion.span 
+                        animate={{ rotate: expandedReviewIndex === i ? 45 : 0 }}
+                        style={{ display: 'inline-block', transformOrigin: 'center center' }}
+                      >
+                        +
+                      </motion.span>
+                    </button>
+                  </div>
+                )}
               </div>
-
-              {/* Bottom right "+" */}
-              {isCenter && (
-                <div className="absolute bottom-6 right-6 z-50">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      setSelectedReviewPopup(i);
-                    }}
-                    className="flex items-center justify-center rounded-full text-white font-avenir-light transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer"
-                    style={{ 
-                      width: 52, 
-                      height: 52, 
-                      background: '#0d1a2c', 
-                      fontSize: '36px', 
-                      lineHeight: 1,
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-                    }}
-                  >
-                    <span style={{ transform: 'translateY(-2px)'}}>+</span>
-                  </button>
-                </div>
-              )}
             </motion.div>
           )
         })}
       </div>
 
-      {/* Avatar dot indicators */}
-      <div className="flex justify-center gap-4 mt-8">
-        {REVIEWS.map((review, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            aria-label={`Go to ${review.name}`}
-            className="flex flex-col items-center gap-1 group relative outline-hidden cursor-pointer"
-          >
-            <motion.div
-              className="rounded-full overflow-hidden shadow-sm"
-              initial={false}
-              animate={{
-                width: i === current ? 44 : 36,
-                height: i === current ? 44 : 36,
-                opacity: i === current ? 1 : 0.45,
-                border: i === current ? '2px solid #0d1a2c' : '2px solid transparent',
-              }}
-              whileHover={{ 
-                scale: 1.25, 
-                opacity: 1,
-                y: -5,
-                boxShadow: '0 8px 16px rgba(13, 26, 44, 0.2)'
-              }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
+      {/* Avatar dot indicators with Arrows */}
+      <div className="flex justify-center items-center gap-[15px] mt-12">
+        <button 
+          onClick={prev}
+          className="p-2 text-[#0d1a2c]/40 hover:text-[#0d1a2c] transition-colors cursor-pointer"
+          aria-label="Previous review"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+
+        <div className="flex items-center gap-4">
+          {REVIEWS.map((review, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              aria-label={`Go to ${review.name}`}
+              className="flex flex-col items-center gap-1 group relative outline-hidden cursor-pointer"
             >
-              <img
-                src={review.avatar}
-                alt={review.name}
-                className="w-full h-full object-cover transition-transform group-hover:scale-110"
-              />
-            </motion.div>
-          </button>
-        ))}
+              <motion.div
+                className="rounded-full overflow-hidden shadow-sm"
+                initial={false}
+                animate={{
+                  width: i === current ? 44 : 36,
+                  height: i === current ? 44 : 36,
+                  opacity: i === current ? 1 : 0.45,
+                  border: i === current ? '2px solid #0d1a2c' : '2px solid transparent',
+                }}
+                whileHover={{ 
+                  scale: 1.25, 
+                  opacity: 1,
+                  y: -5,
+                  boxShadow: '0 8px 16px rgba(13, 26, 44, 0.2)'
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+              >
+                <img
+                  src={review.avatar}
+                  alt={review.name}
+                  className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                />
+              </motion.div>
+            </button>
+          ))}
+        </div>
+
+        <button 
+          onClick={next}
+          className="p-2 text-[#0d1a2c]/40 hover:text-[#0d1a2c] transition-colors cursor-pointer"
+          aria-label="Next review"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
       </div>
 
-      {/* Full Review Popup */}
-      <AnimatePresence>
-        {selectedReviewPopup !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
-            onClick={() => setSelectedReviewPopup(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="bg-white rounded-[40px] p-8 md:p-12 max-w-4xl w-full relative shadow-2xl flex flex-col md:flex-row gap-8 items-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button 
-                onClick={() => setSelectedReviewPopup(null)}
-                className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-[#0d1a2c]/60 hover:text-[#0d1a2c] bg-gray-100/50 hover:bg-gray-100 rounded-full transition-colors"
-                aria-label="Close review popup"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-
-              <div className="shrink-0">
-                <div className="w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden shadow-lg border-4 border-white">
-                  <img 
-                    src={REVIEWS[selectedReviewPopup].avatar} 
-                    alt={REVIEWS[selectedReviewPopup].name} 
-                    className="w-full h-full object-cover" 
-                  />
-                </div>
-              </div>
-
-              <div className="flex-1 text-center md:text-left flex flex-col justify-center">
-                <h4 className="font-avenir-heavy text-[#0d1a2c] text-2xl md:text-[32px] mb-4 leading-tight">
-                  {REVIEWS[selectedReviewPopup].quote}
-                </h4>
-                <p className="font-avenir-regular text-[#0d1a2c]/80 text-lg md:text-[20px] mb-8 leading-relaxed italic">
-                  {REVIEWS[selectedReviewPopup].body}
-                </p>
-                <div>
-                  <p className="font-avenir-heavy text-[#0d1a2c] text-xl mb-1">{REVIEWS[selectedReviewPopup].name}</p>
-                  <p className="font-avenir-regular text-[#0d1a2c]/70 text-lg">{REVIEWS[selectedReviewPopup].role}</p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
-
 
 
