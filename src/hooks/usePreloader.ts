@@ -21,6 +21,16 @@ export function usePreloader() {
     const loadFonts = async () => {
       if ('fonts' in document) {
         try {
+          const fontsToLoad = [
+            '800 16px Avenir',
+            '500 16px Avenir',
+            '400 16px Avenir',
+            '300 16px Avenir',
+            '400 16px AvenirNext',
+            '600 16px AvenirNext'
+          ]
+          
+          await Promise.all(fontsToLoad.map(f => document.fonts.load(f)))
           await document.fonts.ready
         } catch (e) {
           console.error('Fonts loading error:', e)
