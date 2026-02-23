@@ -78,7 +78,7 @@ export default function ProgramBuiltOnExperienceDesktop() {
   return (
     <section 
       ref={ref}
-      className="w-full py-24 px-10 xl:px-24"
+      className="w-full py-56 px-10 xl:px-24"
       style={{ background: '#EEE9DE' }}
     >
       <div className="max-w-350 mx-auto relative z-10">

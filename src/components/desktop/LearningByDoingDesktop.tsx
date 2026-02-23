@@ -54,7 +54,7 @@ export default function LearningByDoingDesktop() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden"
+      className="relative w-full overflow-hidden py-56"
       style={{ background: '#f4f8ed' }}
     >
       {/* ── Backdrop ────────────────────────────────────────────────── */}
@@ -152,7 +152,7 @@ export default function LearningByDoingDesktop() {
 
       {/* ── Section body ─────────────────────────────────────────────── */}
       <div 
-        className="relative z-10 flex items-center min-h-[90vh] w-full py-20 pr-10 xl:pr-24"
+        className="relative z-10 flex items-center min-h-[90vh] w-full pr-10 xl:pr-24"
         style={{ padding: '0 81.5px' }}
       >
 

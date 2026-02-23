@@ -187,7 +187,7 @@ export default function BecomeTheInvestorDesktop() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full py-32"
+      className="relative w-full py-56"
       style={{ background: '#0D0F14' }}
     >
       <div className="absolute top-[15%] left-[5%] w-64 h-64 bg-[#fbd979]/5 rounded-full blur-[80px] pointer-events-none z-0" />
@@ -228,7 +228,7 @@ export default function BecomeTheInvestorDesktop() {
       <motion.div 
         layout 
         transition={{ layout: { type: 'spring', stiffness: 150, damping: 25 } }} 
-        className="mt-24 flex justify-center px-10 pb-24"
+        className="mt-56 flex justify-center px-10 pb-32"
       >
         <motion.div
            initial={{ opacity: 0, y: 30 }}
@@ -237,10 +237,10 @@ export default function BecomeTheInvestorDesktop() {
            transition={{ duration: 0.8 }}
            className="inline-flex flex-col items-center text-center"
         >
-          <h2 className="font-avenir-medium text-white mb-1 leading-tight text-center" style={{ fontSize: '64.5px' }}>
+          <h2 className="font-avenir-medium text-white leading-tight text-center" style={{ fontSize: '64.5px', marginBottom: '4px' }}>
             Find Your Place in the<br />Investing Journey
           </h2>
-          <p className="font-avenir-regular text-white/50 max-w-2xl mb-4 text-center" style={{ fontSize: '22px' }}>
+          <p className="font-avenir-regular text-white/50 max-w-2xl text-center" style={{ fontSize: '22px', marginBottom: '16px' }}>
             A 2-minute assessment to understand where you are today (and what typically comes next).
           </p>
           
@@ -249,13 +249,12 @@ export default function BecomeTheInvestorDesktop() {
               href={import.meta.env.VITE_APPLY_URL || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full font-avenir-medium text-[#0d1a2c] flex items-center justify-center rounded-2xl group shadow-lg"
+              className="w-full max-w-[440px] font-avenir-heavy text-[#0d1a2c] flex items-center justify-center rounded-[20px] group shadow-lg"
               style={{
                 backgroundColor: '#fbd979',
-                border: '1.5px solid #fbd979',
                 whiteSpace: 'nowrap',
-                fontSize: '20.83px',
-                height: '69px'
+                fontSize: '22px',
+                height: '74px'
               }}
               initial="initial"
               animate="animate"

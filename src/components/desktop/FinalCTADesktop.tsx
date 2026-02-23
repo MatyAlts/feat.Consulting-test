@@ -2,60 +2,56 @@ import { motion } from 'framer-motion'
 
 export default function FinalCTADesktop() {
   return (
-    <section className="relative w-full py-40 overflow-hidden bg-white flex flex-col items-center justify-center text-center">
-      {/* Decor shapes */}
-      {/* Grey shape top-left - approximating rounded shape */}
-      <div className="absolute top-0 left-0 w-100 h-100 bg-[#D4D8DD] rounded-[100%] blur-3xl opacity-40 transform -translate-x-[40%] -translate-y-[40%] pointer-events-none" />
-      {/* Sharper grey shape if needed, user image shows solid shape */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-[#D4D8DD] rounded-br-[100px] transform -translate-x-[20%] -translate-y-[20%] pointer-events-none" style={{ borderRadius: '0 0 150px 0' }} />
+    <section className="relative w-full py-40 overflow-hidden bg-white flex flex-col items-center justify-center">
+      {/* Decor shapes outside the container */}
+      {/* Grey shape top-left */}
+      <div className="absolute top-[-50px] left-[-50px] w-64 h-64 bg-[#E5E7EB] rounded-[80px] rotate-45 pointer-events-none opacity-60" />
+      
+      {/* Beige arc bottom-right */}
+      <div className="absolute -bottom-20 -right-20 w-[500px] h-[500px] border-[50px] border-[#FCE6D2] rounded-full pointer-events-none opacity-70" />
 
-      {/* Beige shape bottom-right */}
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#FFE8CC] transform translate-x-[30%] translate-y-[30%] rotate-45 pointer-events-none" />
-
-      {/* Content */}
+      {/* Main Container */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 max-w-4xl px-6 flex flex-col items-center"
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full max-w-[1020px] bg-[#1A1C25] rounded-[60px] flex flex-col items-center justify-center text-center shadow-2xl mx-4 aspect-[502/269]"
       >
-        <div className="inline-flex flex-col items-center text-center">
-          <h2 className="font-avenir-heavy text-[#0d1a2c] text-6xl md:text-7xl mb-6 leading-tight">
-            Ready for the <br /> Next Step?
-          </h2>
-          <p className="font-avenir-regular text-[#5b616e] text-xl md:text-2xl mb-10 max-w-xl mx-auto leading-relaxed">
-            If you’re serious about learning through real <br className="hidden md:block"/> decisions, let’s talk.
-          </p>
-          
-          <motion.a
-            href={import.meta.env.VITE_APPLY_URL || '#'}
-            className="w-full font-avenir-medium text-white flex items-center justify-center gap-3 rounded-2xl cursor-pointer no-underline"
-            style={{
-              backgroundColor: '#09092c',
-              border: '1.5px solid #fbd979',
-              whiteSpace: 'nowrap',
-              fontSize: '20.83px',
-              height: '69px'
-            }}
-            initial="initial"
-            animate="animate"
-            whileHover="hover"
-            whileTap="tap"
-            variants={{
-              initial: { opacity: 0, scale: 0.96 },
-              animate: { opacity: 1, scale: 1 },
-              hover: { backgroundColor: '#fbd979', color: '#09092c' },
-              tap: { scale: 0.97, backgroundColor: '#fbd979', color: '#09092c' },
-            }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-          >
-            <span>Start a Conversation</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-              <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </motion.a>
-        </div>
+        <h2 className="font-avenir-medium text-white leading-[1.1] tracking-tight" style={{ fontSize: '64.5px', marginBottom: '4px' }}>
+          Ready for the <br /> Next Step?
+        </h2>
+        
+        <p className="font-avenir-regular text-[#94969C] max-w-xl mx-auto leading-relaxed" style={{ fontSize: '22px', marginBottom: '16px' }}>
+          If you're serious about learning through real <br className="hidden md:block" /> decisions, let's talk.
+        </p>
+        
+        <motion.a
+          href={import.meta.env.VITE_APPLY_URL || '#'}
+          className="w-full max-w-[440px] font-avenir-heavy text-[#1A1C25] flex items-center justify-center gap-2 rounded-[20px] cursor-pointer no-underline hover:brightness-105 transition-all"
+          style={{
+            backgroundColor: '#FED97F',
+            fontSize: '22px',
+            height: '74px',
+            boxShadow: '0 4px 14px 0 rgba(254, 217, 127, 0.2)',
+            marginBottom: '5px'
+          }}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <span>Start a Conversation</span>
+          <img 
+            src="/assets_mobile/flecha.svg" 
+            alt="" 
+            className="w-[8.5px] h-[8.5px]" 
+            style={{ filter: 'brightness(0) invert(0.1)' }}
+          />
+        </motion.a>
+
+
+        <p className="font-avenir-regular text-[#667085] text-lg opacity-70">
+          No commitment. Just a starting point.
+        </p>
       </motion.div>
     </section>
   )
