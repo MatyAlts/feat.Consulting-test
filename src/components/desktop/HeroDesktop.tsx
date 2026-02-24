@@ -10,7 +10,7 @@ export default function HeroDesktop() {
       {/* ── Hero header (logo only, not sticky) ────────────────────── */}
       <nav className="w-full bg-white flex items-center justify-center px-8 py-4 border-b border-gray-100">
         <motion.img
-          src="/assets_mobile/LOGO SIA.svg"
+          src="/assets_mobile/sia hero desktop.png"
           alt="SIA Angel Hub"
           className="h-10"
           initial={{ opacity: 0, y: -8 }}
@@ -221,7 +221,7 @@ export default function HeroDesktop() {
                     key={i}
                     src={src}
                     alt={`Investor ${i + 1}`}
-                    className="rounded-full border-2 border-white object-cover cursor-pointer"
+                    className="object-contain cursor-pointer"
                     style={{
                       width: 36,
                       height: 36,

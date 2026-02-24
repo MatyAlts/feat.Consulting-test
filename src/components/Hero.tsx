@@ -31,7 +31,7 @@ export default function Hero() {
 
         {/* Logo */}
         <motion.img
-          src="/assets_mobile/LOGO SIA.svg"
+          src="/assets_mobile/sia hero desktop.png"
           alt="SIA Angel Hub"
           className="h-10 mb-6"
           initial={{ opacity: 0, y: -10 }}
@@ -220,7 +220,7 @@ export default function Hero() {
                   key={i}
                   src={src}
                   alt={`Investor ${i + 1}`}
-                  className="rounded-full border-2 border-white object-cover cursor-pointer"
+                  className="object-contain cursor-pointer"
                   style={{
                     width: 32,
                     height: 32,
