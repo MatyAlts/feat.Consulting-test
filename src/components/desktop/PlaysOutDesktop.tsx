@@ -60,7 +60,7 @@ const CARDS = [
 // 0 = complete overlap (next card fully covers the previous)
 const STACK_OFFSET = 12
 // top offset = space for the sticky "Here's how that plays out:" bar
-const TITLE_OFFSET = 100
+const TITLE_OFFSET = 180
 
 // ── Card ──────────────────────────────────────────────────────────────────────
 const PlaysOutCardDesktop = forwardRef<
@@ -72,8 +72,12 @@ const PlaysOutCardDesktop = forwardRef<
 
   const textContainerJSX = (
     <div
-      className="relative flex flex-col justify-center px-[39.28px] overflow-hidden shadow-2xl border border-white/5"
-      style={{ background: '#0B2232', borderRadius: 40 }}
+      className="relative flex flex-col justify-center px-[39.28px] overflow-hidden border border-white/5"
+      style={{ 
+        background: '#0B2232', 
+        borderRadius: 40,
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 -30px 60px -15px rgba(0, 0, 0, 0.3)'
+      }}
     >
       <div className="relative w-full">
         {/* Title and Subtitle Group — slides up when expanded */}
@@ -121,10 +125,9 @@ const PlaysOutCardDesktop = forwardRef<
         </motion.div>
       </div>
 
-      {/* Toggle button — rotates from "+" to "x" */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="absolute bottom-10 right-10 z-30 transition-all duration-300 hover:scale-110 active:scale-95"
+      {/* Toggle indicator — rotates from "+" to "x" */}
+      <div
+        className="absolute bottom-10 right-10 z-30 transition-all duration-300 group-hover/card:scale-110"
       >
         <motion.span
           animate={{ rotate: isExpanded ? 45 : 0 }}
@@ -133,7 +136,7 @@ const PlaysOutCardDesktop = forwardRef<
         >
           +
         </motion.span>
-      </button>
+      </div>
     </div>
   )
 
@@ -144,12 +147,14 @@ const PlaysOutCardDesktop = forwardRef<
         position: 'sticky',
         top: stickyTop,
         zIndex: 20 + index,
-        // Short scroll distance — next card appears quickly
-        paddingBottom: '10vh',
+        // Increased scroll distance — each card "locks" in place longer
+        paddingBottom: '70vh',
+        scrollSnapAlign: 'start'
       }}
     >
       <div
-        className="w-full mx-auto grid grid-cols-2 box-border relative px-[42px] gap-[22px]"
+        className="w-full mx-auto grid grid-cols-2 box-border relative px-[42px] gap-[22px] cursor-pointer group/card"
+        onClick={() => setIsExpanded(!isExpanded)}
         style={{
           height: 'calc(100vh - 296px)',
         }}
@@ -157,11 +162,17 @@ const PlaysOutCardDesktop = forwardRef<
         {imageRight ? (
           <>
             {textContainerJSX}
-            <div className="overflow-hidden shadow-2xl relative" style={{ borderRadius: 40 }}>
+            <div 
+              className="overflow-hidden relative" 
+              style={{ 
+                borderRadius: 40,
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 -30px 60px -15px rgba(0, 0, 0, 0.3)'
+              }}
+            >
               <img
                 src={card.image}
                 alt={card.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105"
                 loading="lazy"
                 style={{ display: 'block' }}
               />
@@ -169,11 +180,17 @@ const PlaysOutCardDesktop = forwardRef<
           </>
         ) : (
           <>
-            <div className="overflow-hidden shadow-2xl relative" style={{ borderRadius: 40 }}>
+            <div 
+              className="overflow-hidden relative" 
+              style={{ 
+                borderRadius: 40,
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 -30px 60px -15px rgba(0, 0, 0, 0.3)'
+              }}
+            >
               <img
                 src={card.image}
                 alt={card.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105"
                 loading="lazy"
                 style={{ display: 'block' }}
               />
@@ -198,7 +215,10 @@ export default function PlaysOutDesktop() {
     <section
       ref={containerRef}
       className="relative"
-      style={{ background: '#EEE9DE' }}
+      style={{ 
+        background: '#EEE9DE',
+        scrollSnapType: 'y proximity'
+      }}
     >
 
 
@@ -220,7 +240,7 @@ export default function PlaysOutDesktop() {
       </motion.div>
 
       {/* ── Stacking full-screen cards ────────────────────────────── */}
-      <div className="w-full">
+      <div className="w-full pt-20">
         {CARDS.map((card, i) => (
           <MemoizedPlaysOutCard
             key={i}

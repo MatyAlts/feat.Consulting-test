@@ -36,7 +36,9 @@ export default function LearningByDoingDesktop() {
   const id = useId()
   const modalRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef(null)
+  const titleRef = useRef(null)
   const inView = useInView(sectionRef, { once: true, margin: '-80px' })
+  const titleInView = useInView(titleRef, { once: true, margin: '-40% 0px' })
 
   // Keyboard + scroll lock
   useEffect(() => {
@@ -66,86 +68,135 @@ export default function LearningByDoingDesktop() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.2 }}
             onClick={() => setActive(null)}
           />
         )}
       </AnimatePresence>
 
       {/* ── Expanded card (modal) ────────────────────────────────────── */}
-      <AnimatePresence>
+      <AnimatePresence mode="sync">
         {active && (
           <div className="fixed inset-0 grid place-items-center z-110 px-6">
-            <motion.div
-              layoutId={`card-${active.title}-${id}`}
-              ref={modalRef}
-              transition={{ type: 'spring', stiffness: 300, damping: 32 }}
-              className="w-full flex flex-row bg-[#0d1a2c] rounded-[40px] overflow-hidden relative shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/5"
-              style={{ maxWidth: 940, minHeight: 480 }}
-            >
-              {/* Left Identity Panel */}
-              <div className="w-[45%] bg-[#122338] p-10 xl:p-12 flex flex-col justify-center relative overflow-hidden">
-                {/* Decorative background circle */}
-                <div className="absolute -top-20 -left-20 w-80 h-80 bg-white/5 rounded-full blur-[60px]" />
-                
-                <motion.div 
-                  layoutId={`emoji-${active.title}-${id}`} 
-                  className="text-7xl mb-10 relative z-10 whitespace-nowrap"
-                >
-                  {active.emoji}
-                </motion.div>
-                
-                <motion.h3
-                  layoutId={`title-${active.title}-${id}`}
-                  className="font-avenir-heavy text-white text-[34px] leading-[1.05] relative z-10 whitespace-pre-line tracking-tight"
-                >
-                  {active.title}
-                </motion.h3>
-              </div>
-
-              {/* Right Content Panel */}
-              <div className="flex-1 p-14 flex flex-col justify-center relative">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  transition={{ duration: 0.35, delay: 0.1 }}
-                  className="space-y-8"
-                >
-                  <p className="font-avenir-regular text-[#FBD979] italic text-[22px] leading-tight">
-                    {active.subtitle}
-                  </p>
+              <motion.div
+                key={active.title}
+                layoutId={`card-${active.title}-${id}`}
+                ref={modalRef}
+                initial={false}
+                transition={{ type: 'spring', stiffness: 220, damping: 30 }}
+                className="w-full flex flex-row bg-[#0d1a2c] rounded-[40px] overflow-hidden relative shadow-[0_0_60px_rgba(0,0,0,0.6)] border border-white/5"
+                style={{ 
+                  maxWidth: 940, 
+                  minHeight: 480, 
+                  willChange: 'transform, opacity',
+                  backfaceVisibility: 'hidden',
+                  transform: 'translateZ(0)',
+                  opacity: 1
+                }}
+              >
+                {/* Left Identity Panel */}
+                <div className="w-[45%] bg-[#122338] p-10 xl:p-12 flex flex-col justify-center relative overflow-hidden">
+                  {/* Decorative background circle */}
+                  <div className="absolute -top-20 -left-20 w-80 h-80 bg-white/5 rounded-full blur-[60px]" />
                   
-                  <div className="w-16 h-px bg-white/10" />
-                  
-                  <p className="font-avenir-regular text-white/80 text-[18px] leading-relaxed">
-                    {active.body}
-                  </p>
-                </motion.div>
-
-                {/* Internal Close Button */}
-                <button
-                  onClickCapture={(e) => {
-                    e.stopPropagation();
-                    setActive(null);
-                  }}
-                  className="absolute top-10 right-10 p-2 text-white/30 hover:text-white transition-colors group"
-                  aria-label="Close modal"
-                >
-                  <svg 
-                    width="26" 
-                    height="26" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="1.5"
-                    className="group-hover:rotate-90 transition-transform duration-300"
+                  <motion.div 
+                    layoutId={`emoji-${active.title}-${id}`} 
+                    className="text-7xl mb-10 relative z-10 whitespace-nowrap"
                   >
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </motion.div>
+                    {active.emoji}
+                  </motion.div>
+                  
+                  <motion.h3
+                    layoutId={`title-${active.title}-${id}`}
+                    className="font-avenir-heavy text-white text-[34px] leading-[1.05] relative z-10 whitespace-pre-line tracking-tight"
+                  >
+                    {active.title}
+                  </motion.h3>
+                </div>
+
+                {/* Right Content Panel */}
+                <div className="flex-1 p-14 flex flex-col justify-center relative">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={active.title}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-8"
+                    >
+                      <p className="font-avenir-regular text-[#FBD979] italic text-[22px] leading-tight">
+                        {active.subtitle}
+                      </p>
+                      
+                      <div className="w-16 h-px bg-white/10" />
+                      
+                      <p className="font-avenir-regular text-white/80 text-[18px] leading-relaxed">
+                        {active.body}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
+
+                  {/* Internal Close Button */}
+                  <button
+                    onClickCapture={(e) => {
+                      e.stopPropagation();
+                      setActive(null);
+                    }}
+                    className="absolute top-10 right-10 p-2 text-white/30 hover:text-white transition-colors group z-50"
+                    aria-label="Close modal"
+                  >
+                    <svg 
+                      width="26" 
+                      height="26" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="1.5"
+                      className="group-hover:rotate-90 transition-transform duration-300"
+                    >
+                      <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+
+                  {/* Navigation Arrows — Bottom Right Corner */}
+                  <div className="absolute bottom-10 right-10 flex items-center gap-3 z-50">
+                    <motion.button
+                      whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const currentIndex = CARDS.findIndex(c => c.title === active.title);
+                        const prevIndex = (currentIndex - 1 + CARDS.length) % CARDS.length;
+                        setActive(CARDS[prevIndex]);
+                      }}
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white/40 hover:text-white transition-all border border-white/10 bg-white/5"
+                      aria-label="Previous card"
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M15 18l-6-6 6-6" />
+                      </svg>
+                    </motion.button>
+
+                    <motion.button
+                      whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const currentIndex = CARDS.findIndex(c => c.title === active.title);
+                        const nextIndex = (currentIndex + 1) % CARDS.length;
+                        setActive(CARDS[nextIndex]);
+                      }}
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white/40 hover:text-white transition-all border border-white/10 bg-white/5"
+                      aria-label="Next card"
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M9 18l6-6-6-6" />
+                      </svg>
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
           </div>
         )}
       </AnimatePresence>
@@ -158,18 +209,31 @@ export default function LearningByDoingDesktop() {
 
         {/* LEFT — text column */}
         <div 
+          ref={titleRef}
           className="flex flex-col justify-center" 
           style={{ flex: '0 1 45%' }}
         >
-          <motion.h2
+          <h2
             className="font-avenir-heavy leading-[1.05] text-[#0d1a2c] mb-8"
             style={{ fontSize: 'clamp(3rem, 5vw, 76px)' }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
           >
-            Welcome to<br />Learning by Doing
-          </motion.h2>
+            {[ "Welcome to", "Learning by Doing" ].map((line, i) => (
+              <div key={i} className="overflow-hidden">
+                <motion.div
+                  initial={{ y: "100%" }}
+                  animate={titleInView ? { y: 0 } : {}}
+                  transition={{ 
+                    duration: 1.2, 
+                    delay: i * 0.2, 
+                    ease: [0.215, 0.61, 0.355, 1] 
+                  }}
+                >
+                  {line}
+                  {i === 0 && <br />}
+                </motion.div>
+              </div>
+            ))}
+          </h2>
 
           <motion.p
             className="font-avenir-regular leading-relaxed mb-10 text-[#0d1a2c]/70"
@@ -187,7 +251,7 @@ export default function LearningByDoingDesktop() {
           <div className="flex flex-col items-start gap-4">
             <motion.a
               href={APPLY_URL}
-              className="font-avenir-medium flex items-center justify-center gap-3 rounded-2xl"
+              className="font-avenir-medium flex items-center justify-center gap-3 rounded-2xl group"
               style={{
                 color: '#0d1a2c',
                 border: '1.5px solid #0d1a2c',
@@ -196,14 +260,36 @@ export default function LearningByDoingDesktop() {
                 padding: '18px 48px',
                 width: 'fit-content',
               }}
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.22 }}
-              whileHover={{ backgroundColor: '#0d1a2c', color: '#ffffff' }}
-              whileTap={{ scale: 0.97 }}
+              initial="initial"
+              animate={inView ? "animate" : "initial"}
+              whileHover="hover"
+              whileTap="tap"
+              variants={{
+                initial: { opacity: 0 },
+                animate: { opacity: 1 },
+                hover: { backgroundColor: '#0d1a2c', color: '#ffffff' },
+                tap: { scale: 0.97, backgroundColor: '#0d1a2c', color: '#ffffff' },
+              }}
+              transition={{ 
+                duration: 0.25, 
+                ease: 'easeInOut',
+                // Keep the entry delay only for the initial appearance
+                opacity: { duration: 0.5, delay: 0.22 } 
+              }}
               aria-label="Apply to Join SIA Angel Hub"
             >
-              Apply to Join <span style={{ fontSize: '1.4rem' }}>↗</span>
+              <span>Apply to Join</span>
+              <motion.img 
+                src="/assets_mobile/flecha.svg" 
+                alt="" 
+                className="w-3 h-3"
+                variants={{
+                  initial: { filter: 'brightness(0)' },
+                  animate: { filter: 'brightness(0)' },
+                  hover: { filter: 'brightness(0) invert(1)' },
+                  tap: { filter: 'brightness(0) invert(1)' },
+                }}
+              />
             </motion.a>
 
             <motion.p

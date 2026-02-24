@@ -1,6 +1,19 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
 export default function FinalCTADesktop() {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Track the scroll progress of the container relative to the viewport
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'center center'], // starts when entering bottom, full scale at center
+  })
+
+  // Map scroll progress: 0 (just entered) → 0.85 scale, 1 (at center) → 1.0 scale
+  const rawScale = useTransform(scrollYProgress, [0, 1], [0.85, 1])
+  const scale = useSpring(rawScale, { stiffness: 80, damping: 20, mass: 0.5 })
+
   return (
     <section className="relative w-full py-40 overflow-hidden bg-white flex flex-col items-center justify-center">
       {/* Decor shapes outside the container */}
@@ -12,10 +25,8 @@ export default function FinalCTADesktop() {
 
       {/* Main Container */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        ref={containerRef}
+        style={{ scale }}
         className="relative z-10 w-full max-w-[1020px] bg-[#1A1C25] rounded-[60px] flex flex-col items-center justify-center text-center shadow-2xl mx-4 aspect-[502/269]"
       >
         <h2 className="font-avenir-medium text-white leading-[1.1] tracking-tight" style={{ fontSize: '64.5px', marginBottom: '4px' }}>
@@ -56,3 +67,4 @@ export default function FinalCTADesktop() {
     </section>
   )
 }
+

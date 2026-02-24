@@ -249,7 +249,7 @@ export default function BecomeTheInvestorDesktop() {
               href={import.meta.env.VITE_APPLY_URL || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full max-w-[440px] font-avenir-heavy text-[#0d1a2c] flex items-center justify-center rounded-[20px] group shadow-lg"
+              className="w-full max-w-[440px] font-avenir-heavy text-[#0d1a2c] flex items-center justify-center rounded-[20px] group shadow-lg border border-transparent"
               style={{
                 backgroundColor: '#fbd979',
                 whiteSpace: 'nowrap',
@@ -263,8 +263,8 @@ export default function BecomeTheInvestorDesktop() {
               variants={{
                 initial: { opacity: 0, scale: 0.98 },
                 animate: { opacity: 1, scale: 1 },
-                hover: { backgroundColor: '#ffffff', color: '#0d1a2c' },
-                tap: { scale: 0.99, backgroundColor: '#ffffff', color: '#0d1a2c' },
+                hover: { backgroundColor: '#09092C', color: '#ffffff', borderColor: '#fbd979' },
+                tap: { scale: 0.99, backgroundColor: '#09092C', color: '#ffffff', borderColor: '#fbd979' },
               }}
               transition={{ duration: 0.25, ease: 'easeInOut' }}
             >
@@ -274,10 +274,10 @@ export default function BecomeTheInvestorDesktop() {
                 alt="" 
                 className="w-[8.5px] h-[8.5px]"
                 variants={{
-                  initial: { filter: 'brightness(0) invert(0)' },
-                  animate: { filter: 'brightness(0) invert(0)' },
-                  hover: { filter: 'brightness(0) invert(0)' },
-                  tap: { filter: 'brightness(0) invert(0)' },
+                  initial: { filter: 'brightness(0)' },
+                  animate: { filter: 'brightness(0)' },
+                  hover: { filter: 'brightness(0) invert(1)' },
+                  tap: { filter: 'brightness(0) invert(1)' },
                 }}
               />
             </motion.a>
