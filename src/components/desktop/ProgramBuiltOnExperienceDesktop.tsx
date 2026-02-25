@@ -120,10 +120,14 @@ export default function ProgramBuiltOnExperienceDesktop() {
           </h2>
           
           <motion.p
-            className="font-avenir-regular text-[#0d1a2c]/70 text-lg lg:text-xl max-w-125 text-left lg:text-right lg:mb-2"
+            className="font-avenir-regular text-[#0d1a2c]/70 text-lg lg:text-xl max-w-125 text-left lg:text-right"
             initial={{ opacity: 0, x: 20 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
+            style={{
+              lineHeight: '135%',
+              letterSpacing: '-0.01em'
+            }}
           >
             SIA is built on a proven investing methodology developed through years of real Angel Investing: Shaped by thousands of evaluations.
           </motion.p>
@@ -180,7 +184,7 @@ export default function ProgramBuiltOnExperienceDesktop() {
               <img 
                 src="/assets_mobile/APBoE_pic.png" 
                 alt="Experience" 
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 scale-105 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-6 rounded-3xl">
@@ -245,7 +249,7 @@ export default function ProgramBuiltOnExperienceDesktop() {
               <img 
                 src="/assets_mobile/APBoE_pic2.png" 
                 alt="Community" 
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 scale-105 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-6 rounded-3xl">

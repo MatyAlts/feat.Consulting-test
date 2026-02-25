@@ -236,16 +236,13 @@ const PlaysOutCard = forwardRef<HTMLDivElement, {
               </p>
             </div>
 
-            {/* "Read more" indicator */}
+            {/* "+" indicator */}
             <div className="w-full flex justify-end mt-1">
-              <div className="flex items-center gap-1.5">
-                <span className="text-amber-200 text-xs font-['Avenir'] opacity-70">
-                  Read more
-                </span>
-                <span className="text-amber-200 text-sm opacity-70">
-                  →
-                </span>
-              </div>
+              <span 
+                className="text-[#FBD979] text-3xl font-avenir-light leading-none"
+              >
+                +
+              </span>
             </div>
           </div>
         </div>

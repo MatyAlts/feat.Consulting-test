@@ -8,13 +8,20 @@ export default function Hero() {
       className="relative flex flex-col overflow-hidden"
       style={{ background: '#FFFFFF' }}
     >
-      {/* Background image container - starting below the logo */}
-      <div className="absolute inset-x-0 bottom-0 z-0" style={{ top: '105px' }}>
+      {/* Background image container - expanded to fill the space between red lines with zoom */}
+      <div 
+        className="absolute inset-x-0 z-0 overflow-hidden" 
+        style={{ top: '65px', bottom: '0' }}
+      >
         <img
           src="/assets_mobile/BG_sin_opacidad.png"
           alt=""
           className="w-full h-full object-cover"
-          style={{ opacity: 1 }}
+          style={{ 
+            opacity: 1,
+            scale: 1.25, // Zoom effect as requested
+            transformOrigin: 'center'
+          }}
           loading="eager"
         />
         {/* White overlay to create the "faded" effect from the reference */}
@@ -24,10 +31,16 @@ export default function Hero() {
             background: 'rgba(255,255,255,0.92)' 
           }}
         />
+        
+        {/* Bottom Fade Leap to White */}
+        <div 
+          className="absolute inset-x-0 bottom-0 h-40 pointer-events-none"
+          style={{ background: 'linear-gradient(to top, #FFFFFF 0%, transparent 100%)' }}
+        />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center w-full px-5 pt-10 pb-10 text-center">
+      <div className="relative z-10 flex flex-col items-center w-full px-5 pt-3 pb-10 text-center">
 
         {/* Logo */}
         <motion.img
@@ -113,8 +126,13 @@ export default function Hero() {
 
         {/* Subtitle */}
         <motion.p
-          className="font-avenir-regular text-sm leading-relaxed mb-7 text-center"
-          style={{ color: '#4B5563', maxWidth: 320 }}
+          className="font-avenir-regular text-sm mb-7 text-center"
+          style={{ 
+            color: '#4B5563', 
+            maxWidth: 320,
+            lineHeight: '138%',
+            letterSpacing: '-0.01em'
+          }}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
@@ -189,7 +207,7 @@ export default function Hero() {
           {/* Stars */}
           <div className="flex gap-0.5">
             {[...Array(5)].map((_, i) => (
-              <svg key={i} width="18" height="18" viewBox="0 0 24 24" fill="#F5C518">
+              <svg key={i} width="18" height="18" viewBox="0 0 24 24" fill="#FBD979">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             ))}

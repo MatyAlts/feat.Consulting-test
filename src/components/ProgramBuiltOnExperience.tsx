@@ -40,33 +40,31 @@ function StatCardTrigger({ stat, index, onClick, visible }: { stat: typeof STATS
     <motion.div
       layoutId={`stat-card-${index}`}
       onClick={onClick}
-      className="relative bg-white rounded shadow-[0px_3.45px_14.8px_4.93px_rgba(49,48,63,0.11)] flex flex-col cursor-pointer overflow-hidden border-none shrink-0"
+      className="relative bg-white rounded-[10px] shadow-[0px_3.45px_14.8px_4.93px_rgba(49,48,63,0.11)] flex cursor-pointer overflow-hidden border-none shrink-0"
       initial={{ opacity: 0, y: 28 }}
       animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 28 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileTap={{ scale: 0.96 }}
       style={{ width: '97.7px', height: '70.6px' }}
     >
-      <div className="flex justify-start items-start gap-1.5 pt-1.5 pb-5">
+      {/* The yellow bar - now full height and matching modal style */}
+      <motion.div 
+        layoutId={`yellow-accent-${index}`}
+        className="w-[4.5px] shrink-0 bg-[#FBD979]" 
+      />
+      
+      <div className="flex-1 flex flex-col justify-start items-start gap-px pt-2 pb-5 pl-2.5 pr-2">
         <motion.div 
-          layoutId={`yellow-accent-${index}`}
-          className="w-0 h-9 shrink-0 ml-[1.73px]" 
-          style={{ outline: '3.45px solid #FBD979', outlineOffset: '-1.73px' }}
-        />
-        
-        <div className="flex-1 flex flex-col justify-start items-start gap-px pr-2">
-          <motion.div 
-            layoutId={`stat-title-${index}`}
-            className="text-gray-900 text-[15px] font-avenir-heavy leading-4 tracking-tight"
-          >
-            <span className="block">
-              {stat.prefix}{visible ? <AnimatedNumber value={stat.target} /> : '0'}
-            </span>
-            {labelLines.map((word, i) => (
-              <span key={i} className="block">{word}</span>
-            ))}
-          </motion.div>
-        </div>
+          layoutId={`stat-title-${index}`}
+          className="text-gray-900 text-[15px] font-avenir-heavy leading-[1.1] tracking-tight"
+        >
+          <span className="block">
+            {stat.prefix}{visible ? <AnimatedNumber value={stat.target} /> : '0'}
+          </span>
+          {labelLines.map((word, i) => (
+            <span key={i} className="block">{word}</span>
+          ))}
+        </motion.div>
       </div>
 
       <motion.div 
@@ -117,26 +115,35 @@ export default function ProgramBuiltOnExperience() {
       </div>
 
       <motion.p
-        className="font-avenir-regular text-center text-slate-700 leading-normal px-2 mb-10"
+        className="font-avenir-regular text-center text-slate-700 px-2 mb-10"
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 0.8, delay: 0.2 }}
-        style={{ fontSize: '15.5px' }}
+        style={{ 
+          fontSize: '15.5px',
+          lineHeight: '135%',
+          letterSpacing: '-0.01em'
+        }}
       >
         SIA is built on a proven investing methodology developed through years of real Angel Investing: Shaped by thousands of startup evaluations, investor discussions, and live investment decisions.
       </motion.p>
 
       <div className="relative max-w-[400px] mx-auto z-10">
-        <motion.img
-          src="/assets_mobile/APBoE_pic.png"
-          alt="Program experience"
-          className="w-full rounded-2xl object-cover shadow-sm mb-4"
+        <motion.div
+          className="w-full rounded-2xl shadow-sm mb-4 overflow-hidden"
           style={{ height: 'auto', minHeight: '340px' }}
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.3 }}
-          loading="lazy"
-        />
+        >
+          <motion.img
+            src="/assets_mobile/APBoE_pic.png"
+            alt="Program experience"
+            className="w-full h-full object-cover"
+            style={{ scale: 1.05 }} // Slight zoom to crop white corners in asset
+            loading="lazy"
+          />
+        </motion.div>
 
         <div className="absolute left-0 right-0 px-2 z-20" style={{ top: 'calc(100% - 32px)' }}>
           <div ref={statsRef} className="flex justify-center items-start gap-3 h-fit">
@@ -206,7 +213,7 @@ export default function ProgramBuiltOnExperience() {
                     {/* The yellow bar also transforms via layoutId */}
                     <motion.div 
                       layoutId={`yellow-accent-${i}`}
-                      className="w-[6px] bg-[#fad46e] shrink-0" 
+                      className="w-[6px] bg-[#FBD979] shrink-0" 
                     />
                     
                     <div className="p-5 flex-1 flex flex-col justify-center">

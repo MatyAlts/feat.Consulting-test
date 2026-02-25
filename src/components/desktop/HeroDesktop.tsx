@@ -25,17 +25,29 @@ export default function HeroDesktop() {
         {/* Solid white underlay to block shapes during load */}
         <div className="absolute inset-0 bg-white" style={{ zIndex: 9 }} />
 
-        {/* Background image */}
-        <div className="absolute inset-0 z-10">
+        {/* Background image - expanded and zoomed with bottom fade */}
+        <div 
+          className="absolute inset-0 z-10 overflow-hidden" 
+        >
           <img
             src="/assets_mobile/BG_sin_opacidad.png"
             alt=""
             className="w-full h-full object-cover object-center"
+            style={{ 
+              scale: 1.25,
+              transformOrigin: 'center'
+            }}
             loading="eager"
           />
           <div
             className="absolute inset-0"
             style={{ background: 'rgba(255,255,255,0.88)' }}
+          />
+
+          {/* Bottom Fade Leap to White */}
+          <div 
+            className="absolute inset-x-0 bottom-0 h-64 pointer-events-none"
+            style={{ background: 'linear-gradient(to top, #FFFFFF 0%, transparent 100%)' }}
           />
         </div>
 
@@ -115,12 +127,14 @@ export default function HeroDesktop() {
 
             {/* Subtitle */}
             <motion.p
-              className="font-avenir-regular leading-relaxed mb-8 text-center"
+              className="font-avenir-regular mb-8 text-center"
               style={{
                 color: '#4B5563',
                 fontSize: '19px',
                 maxWidth: '610px',
-                width: '100%'
+                width: '100%',
+                lineHeight: '138%',
+                letterSpacing: '-0.01em'
               }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -190,7 +204,7 @@ export default function HeroDesktop() {
             {/* Stars */}
             <div className="flex gap-1">
               {[...Array(5)].map((_, i) => (
-                <svg key={i} width="20" height="20" viewBox="0 0 24 24" fill="#F5C518">
+                <svg key={i} width="20" height="20" viewBox="0 0 24 24" fill="#FBD979">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
               ))}
