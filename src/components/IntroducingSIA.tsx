@@ -49,13 +49,29 @@ export default function IntroducingSIA() {
 
       {/* Subtitle — Avenir Next (regular), #344466 */}
       <motion.p
-        className="font-avenir-regular text-sm text-center leading-relaxed mb-[34px]"
+        className="font-avenir-regular text-sm text-center leading-relaxed mb-[5px]"
         style={{ color: '#344466', maxWidth: 300 }}
         initial={{ opacity: 0, y: 10 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        Real startups. Real decisions. Real outcomes.
+        Real startups. Real outcomes.
+      </motion.p>
+
+      {/* New descriptive text */}
+      <motion.p
+        className="font-avenir-medium text-center leading-relaxed mb-[34px]"
+        style={{ 
+          color: '#344466', 
+          fontSize: '0.875rem', // Matches text-sm (14px)
+          maxWidth: 320,
+          letterSpacing: '-0.01em'
+        }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        A cohort-based Angel Investing program built around tangible decisions on live deals.
       </motion.p>
     </section>
   )

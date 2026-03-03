@@ -52,7 +52,7 @@ function InvestorCard({ card, index }: { card: typeof CARDS[0]; index: number })
         <div className="flex flex-col justify-center pt-1">
           {index === 2 ? (
             <>
-              <p className="leading-tight mb-1" style={{ fontSize: '1.25rem', color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', fontWeight: 100 }}>
+              <p className="leading-tight mb-1" style={{ fontSize: '1.25rem', color: '#FFFFFF', fontFamily: 'DM Sans', fontWeight: 100 }}>
                 {card.subtitle}
               </p>
               <p className="text-white leading-tight" style={{ fontSize: '1.45rem', fontFamily: 'DM Sans', fontWeight: 400 }}>
@@ -65,7 +65,7 @@ function InvestorCard({ card, index }: { card: typeof CARDS[0]; index: number })
                 {card.title}
               </p>
               {card.subtitle && (
-                <p className="leading-tight" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1.35rem', fontFamily: 'DM Sans', fontWeight: 100 }}>
+                <p className="leading-tight" style={{ color: '#FFFFFF', fontSize: '1.35rem', fontFamily: 'DM Sans', fontWeight: 100 }}>
                   {card.subtitle}
                 </p>
               )}
@@ -90,7 +90,7 @@ function InvestorCard({ card, index }: { card: typeof CARDS[0]; index: number })
         </p>
         <button
           onClick={() => setOpen(!open)}
-          className="shrink-0 flex items-center justify-center font-avenir-heavy"
+          className="shrink-0 flex items-center justify-center font-avenir-light"
           style={{ background: 'transparent', color: '#fbd979', fontSize: '1.2rem' }}
           aria-label={open ? 'Collapse' : 'Expand'}
         >

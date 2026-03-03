@@ -15,10 +15,12 @@ const STATS = [
     body: 'A diverse base of thoughtful, active participants.',
   },
   {
-    target: 2000,
-    prefix: '+',
-    label: 'Startups Reviewed',
-    body: 'Broad exposure across industries, stages, and quality levels.',
+    target: 350,
+    prefix: '€',
+    suffix: 'M',
+    label: 'Invested by alumni',
+    triggerLabel: 'Invested',
+    body: 'Impactful capital deployed by our network of graduates.',
   },
 ]
 
@@ -34,7 +36,6 @@ function AnimatedNumber({ value }: { value: number }) {
 }
 
 function StatCardTrigger({ stat, index, onClick, visible }: { stat: typeof STATS[0]; index: number; onClick: () => void; visible: boolean }) {
-  const labelLines = stat.label.split(' ')
 
   return (
     <motion.div
@@ -59,9 +60,9 @@ function StatCardTrigger({ stat, index, onClick, visible }: { stat: typeof STATS
           className="text-gray-900 text-[15px] font-avenir-heavy leading-[1.1] tracking-tight"
         >
           <span className="block">
-            {stat.prefix}{visible ? <AnimatedNumber value={stat.target} /> : '0'}
+            {stat.prefix}{visible ? <AnimatedNumber value={stat.target} /> : '0'}{stat.suffix}
           </span>
-          {labelLines.map((word, i) => (
+          {(stat.triggerLabel || stat.label).split(' ').map((word, i) => (
             <span key={i} className="block">{word}</span>
           ))}
         </motion.div>
@@ -100,7 +101,7 @@ export default function ProgramBuiltOnExperience() {
         background: 'linear-gradient(to bottom, #f4f8ed 0%, #ffffff 120px, #ffffff 65%, #EEE9DE 100%)' 
       }}
     >
-      <div className="max-w-[400px] mx-auto text-center mb-8">
+      <div className="max-w-[400px] mx-auto text-center mb-2">
         <motion.h2
           className="font-avenir-heavy leading-none text-[#060621]"
           style={{ fontSize: '29px' }}

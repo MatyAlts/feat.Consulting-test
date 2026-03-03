@@ -92,12 +92,21 @@ function BottomSheet({
             maxHeight: '85vh',
           }}
         >
-          {/* Drag handle */}
-          <div className="flex justify-center pt-3 pb-2">
+          {/* Header area with drag handle & Close Button */}
+          <div className="relative pt-4 pb-3 flex justify-center items-center">
             <div 
               className="w-10 h-1 rounded-full"
               style={{ background: 'rgba(255,255,255,0.3)' }}
             />
+            <button
+              onClick={onClose}
+              className="absolute right-3 p-2 text-white/50 hover:text-white transition-colors flex items-center justify-center rounded-full"
+              aria-label="Close"
+            >
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 13L13 1M1 1L13 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
           </div>
 
           {/* Image */}

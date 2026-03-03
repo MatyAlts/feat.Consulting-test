@@ -84,7 +84,7 @@ function InvestorCard({ card, index, imageRight }: { card: (typeof CARDS)[0]; in
             {index === 2 ? (
               /* Special layout for 3rd card */
               <>
-                <h4 className="font-dm-thin text-white text-[50px] mb-0 leading-tight">
+                <h4 className="font-dm-thin leading-tight mb-0" style={{ color: '#FFFFFF', fontSize: '50px' }}>
                   {card.subtitle}
                 </h4>
                 <h3 className="text-white leading-[1.1] mb-0 font-dm-regular text-[50px] tracking-tight">
@@ -98,7 +98,7 @@ function InvestorCard({ card, index, imageRight }: { card: (typeof CARDS)[0]; in
                   {card.title}
                 </h3>
                 {card.subtitle && (
-                  <h4 className="font-dm-thin text-white/25 text-[40px] mb-0 leading-tight">
+                  <h4 className="font-dm-thin text-white text-[40px] mb-0 leading-tight">
                     {card.subtitle}
                   </h4>
                 )}

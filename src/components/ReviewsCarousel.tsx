@@ -4,25 +4,28 @@ import type { PanInfo } from 'framer-motion'
 
 const REVIEWS = [
   {
-    quote: '\u201cIt didn\u2019t just teach me investing. It changed how I decide.\u201d',
-    body: "What an amazing program! I joined it 'knowing' what the discussions would be about\u2026 I was wrong. The depth of interaction and the practical approach completely transformed how I evaluate opportunities.",
-    name: 'Matteo Costa',
-    role: 'Business Administrator | Angel Investor',
-    avatar: '/assets_mobile/investors (1).png',
+    quote: '\u201cFrom asking better questions to making my first investment.\u201d',
+    body: "This program gave me confidence to make my first investment. Learning how to ask the right questions and where to focus during due diligence was invaluable. I now feel ready to make additional angel investments soon.",
+    name: 'Aneta Eprikyan',
+    role: 'CFO at Telecom Company',
+    location: 'Armenia',
+    avatar: '/assets_mobile/Aneta Eprikyan.png',
   },
   {
-    quote: '\u201cDeep learning comes from real-life context.\u201d',
-    body: 'There is no better way of learning what you read in textbooks and watch in videos than by applying it in real time with real startups and real capital.',
-    name: 'Matteo Costa',
-    role: 'Business Administrator | Angel Investor',
-    avatar: '/assets_mobile/investors (2).png',
+    quote: '\u201cAngel investing finally felt accessible.\u201d',
+    body: 'The program is amazing for anyone new to angel investing. It helped me understand how different investors approach startups, the full due diligence process, and how to structure evaluations. While overwhelming at first, participating has made angel investing feel accessible to me.',
+    name: 'Assumpta Munsi',
+    role: 'Founder, Communication Coach | Opera Singer',
+    location: 'Germany, based in Barcelona',
+    avatar: '/assets_mobile/Assumpta Munsi.png',
   },
   {
-    quote: '\u201cA safe space for you to broaden your knowledge in industries.\u201d',
-    body: 'One exciting thing about the program is that it creates a safe space for you to broaden your knowledge across sectors without the usual barriers of entry.',
-    name: 'Joao Paulo Diogo',
-    role: 'Business Administrator | Angel Investor',
-    avatar: '/assets_mobile/investors (3).png',
+    quote: '\u201cIt clarified what actually matters in an investment decision.\u201d',
+    body: 'The program confirmed some of my investment hypotheses and taught me the importance of separating deal terms from company evaluation. I now see angel investing as accessible and am planning to make additional investments soon.',
+    name: 'AnnaMaria White',
+    role: 'Founder and Strategic Communications Executive | Ex-Amazon',
+    location: 'USA, based in Barcelona',
+    avatar: '/assets_mobile/AnnaMaria White.png',
   },
 ]
 
@@ -109,13 +112,14 @@ export default function ReviewsCarousel() {
                 style={{ width: cardWidth, flexShrink: 0, marginRight: CARD_GAP }}
               >
                 <div
-                  className="rounded-2xl bg-white p-4"
+                  className="rounded-2xl bg-white p-4 cursor-pointer select-none"
                   style={{ border: '1px solid #E5E7EB' }}
+                  onClick={() => setExpanded(isExpanded ? null : i)}
                 >
                   {/* Quote */}
                   <p
-                    className="font-avenir-heavy text-sm italic leading-snug mb-2"
-                    style={{ color: '#1B2A4A' }}
+                    className="font-avenir-heavy italic leading-[1.2] mb-1"
+                    style={{ color: '#0B2232', fontSize: '17px', letterSpacing: '-0.04em' }}
                   >
                     {review.quote}
                   </p>
@@ -128,8 +132,8 @@ export default function ReviewsCarousel() {
                     transition={{ duration: 0.35, ease: 'easeInOut' }}
                   >
                     <p
-                      className="font-avenir-regular text-xs leading-relaxed mb-3"
-                      style={{ color: '#6B7280' }}
+                      className="font-avenir-regular leading-[1.4] mb-4"
+                      style={{ color: '#4B5563', fontSize: '15px', letterSpacing: '-0.03em' }}
                     >
                       {review.body}
                     </p>
@@ -145,22 +149,19 @@ export default function ReviewsCarousel() {
                         style={{ width: 32, height: 32 }}
                         loading="lazy"
                       />
-                      <div>
-                        <p className="font-avenir-medium text-xs" style={{ color: '#1B2A4A' }}>
-                          &mdash; {review.name}
+                      <div className="pt-1.5 flex flex-col">
+                        <p className="font-avenir-medium text-[13.5px] leading-[1.1]" style={{ color: '#1B2A4A', letterSpacing: '-0.02em', marginBottom: '-1px' }}>
+                          — {review.name}
                         </p>
-                        <p className="font-avenir-light text-xs" style={{ color: '#6B7280' }}>
-                          {review.role}
+                        <p className="font-avenir-medium text-[13.5px] leading-[1.1]" style={{ color: '#6B7280', letterSpacing: '-0.01em' }}>
+                          {review.location}
                         </p>
                       </div>
                     </div>
 
-                    {/* Chevron expand button */}
-                    <button
-                      onClick={() => setExpanded(isExpanded ? null : i)}
-                      className="shrink-0 flex items-center justify-center"
-                      style={{ color: '#9CA3AF', padding: 4 }}
-                      aria-label={isExpanded ? 'Collapse review' : 'Expand review'}
+                    {/* Chevron expand button - now just visual decoration */}
+                    <div
+                      className="shrink-0 flex items-center justify-center text-[#9CA3AF] p-1"
                     >
                       <motion.svg
                         width="16"
@@ -176,7 +177,7 @@ export default function ReviewsCarousel() {
                       >
                         <polyline points="6 9 12 15 18 9" />
                       </motion.svg>
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>

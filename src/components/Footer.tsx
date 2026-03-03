@@ -1,5 +1,5 @@
 export default function Footer() {
-  const email = import.meta.env.VITE_CONTACT_EMAIL || 'info@sia.com'
+  const email = 'events@mossyventures.com'
 
   return (
     <footer
@@ -21,7 +21,9 @@ export default function Footer() {
         </p>
 
         <a
-          href="#"
+          href="https://taac.startupinvestoraccelerator.com/privacy-policy/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="font-avenir-regular"
           style={{ color: '#ffffff', fontSize: 13, fontFamily: 'AvenirNext', opacity: 0.9 }}
         >
@@ -33,10 +35,15 @@ export default function Footer() {
           className="font-avenir-regular underline underline-offset-4"
           style={{ color: '#ffffff', fontSize: 13, fontFamily: 'AvenirNext', opacity: 0.9 }}
         >
-          {email}
+          Contact Us
         </a>
 
-        <div className="flex items-center gap-3 mt-4">
+        <a 
+          href="https://feat.consulting" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="flex items-center gap-3 mt-4 hover:opacity-80 transition-opacity"
+        >
           <p 
             className="font-avenir-regular text-right leading-tight" 
             style={{ fontSize: 13, color: '#ffffff', fontFamily: 'AvenirNext', opacity: 0.9 }}
@@ -48,7 +55,7 @@ export default function Footer() {
             alt="feat.Consulting"
             style={{ height: 32, filter: 'brightness(0) invert(1)' }}
           />
-        </div>
+        </a>
       </div>
     </footer>
   )

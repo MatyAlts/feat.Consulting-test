@@ -43,9 +43,9 @@ export default function ReadyNextStep() {
         </div>
       </div>
 
-      {/* Overlapping White Info Card */}
+      {/* Overlapping Dark Info Card (Desktop colors Applied to Mobile Design) */}
       <motion.div
-        className="relative bg-white w-full max-w-[360px] rounded-[40px] px-8 pt-10 pb-10 flex flex-col items-center text-center shadow-xl shadow-gray-200/50"
+        className="relative bg-[#1A1C25] w-full max-w-[360px] rounded-[40px] px-8 pt-10 pb-10 flex flex-col items-center text-center shadow-2xl"
         style={{ marginTop: '-45px', zIndex: 2 }}
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -53,7 +53,7 @@ export default function ReadyNextStep() {
       >
         <h2
           className="font-avenir-heavy leading-none mb-3"
-          style={{ fontSize: '1.95rem', color: '#0d1a2c' }}
+          style={{ fontSize: '1.95rem', color: '#FFFFFF' }}
         >
           Ready for the
           <br />
@@ -62,14 +62,15 @@ export default function ReadyNextStep() {
 
         <p
           className="font-avenir-regular text-[15px] leading-snug mb-9"
-          style={{ color: '#4b5563', maxWidth: 280, fontFamily: 'AvenirNext' }}
+          style={{ color: '#94969C', maxWidth: 280 }}
         >
           If you're serious about learning through real decisions, let's talk.
         </p>
 
         <motion.a
           href={import.meta.env.VITE_APPLY_URL || '#'}
-          className="font-avenir-medium bg-[#0052cc] text-white flex items-center justify-center rounded-2xl py-4 text-base px-10 w-full shadow-lg shadow-blue-600/20"
+          className="font-avenir-heavy bg-[#FED97F] text-[#1A1C25] flex items-center justify-center rounded-2xl py-4 text-base px-10 w-full shadow-lg"
+          style={{ boxShadow: '0 4px 14px 0 rgba(254, 217, 127, 0.2)' }}
           initial="initial"
           animate="animate"
           whileHover="hover"
@@ -77,14 +78,19 @@ export default function ReadyNextStep() {
           variants={{
             initial: { opacity: 1 },
             animate: { opacity: 1 },
-            hover: { backgroundColor: '#0043a4' },
+            hover: { filter: 'brightness(1.05)' },
             tap: { scale: 0.98 }
           }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
           aria-label="Start a Conversation"
         >
           <span className="mr-2">Start a Conversation</span>
-          <img src="/assets_mobile/flecha.svg" alt="" className="w-[8.5px] h-[8.5px] invert brightness-200" />
+          <img 
+            src="/assets_mobile/flecha.svg" 
+            alt="" 
+            className="w-[8.5px] h-[8.5px]" 
+            style={{ filter: 'brightness(0) invert(0.1)' }}
+          />
         </motion.a>
       </motion.div>
     </section>

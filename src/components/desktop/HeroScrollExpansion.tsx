@@ -227,10 +227,19 @@ function SolutionView() {
       {/* Subtitle */}
       <motion.p
         variants={item}
-        className="font-avenir-regular text-center leading-relaxed"
-        style={{ color: 'rgba(7, 12, 23, 0.55)', fontSize: '44px' }}
+        className="font-avenir-regular text-center leading-[1.2]"
+        style={{ color: 'rgba(7, 12, 23, 0.55)', fontSize: '44px', marginBottom: '8px' }}
       >
-        Real startups. Real decisions. Real outcomes.
+        Real startups. Real outcomes.
+      </motion.p>
+
+      {/* Description */}
+      <motion.p
+        variants={item}
+        className="font-avenir-medium text-center leading-[1.2] max-w-5xl"
+        style={{ color: '#344466', fontSize: '44px' }}
+      >
+        A cohort-based Angel Investing program built around tangible decisions on live deals.
       </motion.p>
     </motion.div>
   )

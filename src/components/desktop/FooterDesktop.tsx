@@ -11,14 +11,25 @@ export default function FooterDesktop() {
           SIA © 2025 All rights reserved
         </div>
         
-        {/* Center */}
         <div className="flex items-center gap-12 font-avenir-light">
-          <a href="#" className="hover:text-white transition-colors hover:opacity-100">Privacy Policy</a>
-          <a href="mailto:info@sia.com" className="hover:text-white transition-colors hover:opacity-100 underline decoration-white/30 hover:decoration-white">info@sia.com</a>
+          <a 
+            href="https://taac.startupinvestoraccelerator.com/privacy-policy/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="hover:text-white transition-colors hover:opacity-100"
+          >
+            Privacy Policy
+          </a>
+          <a href="mailto:events@mossyventures.com" className="hover:text-white transition-colors hover:opacity-100 underline decoration-white/30 hover:decoration-white">Contact Us</a>
         </div>
         
         {/* Right */}
-        <div className="flex items-center gap-4 text-right">
+        <a 
+          href="https://feat.consulting"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-4 text-right hover:opacity-100 transition-opacity"
+        >
           <div className="flex flex-col items-end leading-tight font-avenir-light text-xs">
             <span>Designed & Developed</span>
             <span>by <span className="font-avenir-heavy">feat.Consulting</span></span>
@@ -29,7 +40,7 @@ export default function FooterDesktop() {
             alt="feat.Consulting" 
             className="w-10 h-auto"
           />
-        </div>
+        </a>
       </div>
     </footer>
   )
