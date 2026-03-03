@@ -3,7 +3,6 @@ import { useInView } from 'framer-motion'
 import './index.css'
 import Hero from './components/Hero'
 import ShiftInFocus from './components/ShiftInFocus'
-import IntroducingSIA from './components/IntroducingSIA'
 import PlaysOutCards from './components/PlaysOutCards'
 import StickyCountdownFooter from './components/StickyCountdownFooter'
 import LearningByDoing from './components/LearningByDoing'
@@ -46,11 +45,10 @@ export default function App() {
         {/* S1 — Hero */}
         <Hero />
 
-        {/* S2 — A Shift in Focus */}
-        <ShiftInFocus />
-
-        {/* S3 — Introducing SIA Angel Hub */}
-        <IntroducingSIA />
+        {/* S2 — A Shift in Focus (overlaps Hero, like desktop) */}
+        <div className="relative z-10 -mt-20">
+          <ShiftInFocus />
+        </div>
 
         {/* S4 — Cards "Here's How That Plays Out" (Accordion) */}
         <PlaysOutCards />
