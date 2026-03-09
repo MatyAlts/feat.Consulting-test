@@ -7,6 +7,7 @@ import {
   useMotionValueEvent,
   AnimatePresence,
 } from 'framer-motion'
+import { useScrollGateProgress } from '../../hooks/useScrollGateProgress'
 
 // Helper for responsive scaling
 const useWindowWidth = () => {
@@ -249,16 +250,15 @@ function SolutionView() {
 
 export default function HeroScrollExpansion() {
   const containerRef = useRef<HTMLDivElement>(null)
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
+  const gatedProgress = useScrollGateProgress({
+    containerRef,
+    sensitivity: 0.001,
   })
 
   // Global scroll for triggers that start at the very top (Hero)
   const { scrollY } = useScroll()
 
-  const smoothProgress = useSpring(scrollYProgress, {
+  const smoothProgress = useSpring(gatedProgress, {
     stiffness: 40,
     damping: 25,
     restDelta: 0.001,
@@ -267,7 +267,7 @@ export default function HeroScrollExpansion() {
   // ── Delayed Shrink Animation ──────────────────────────────────────────
   // Now starts at 0.2 to allow first text to animate in while rect is "full"
   const horizontalPadding = useTransform(smoothProgress, [0.2, 0.8], [81.5, 168])
-  const width = useTransform(horizontalPadding, (p) => `calc(100vw - (${p}px * 2))`)
+  const width = useTransform(horizontalPadding, (p) => `calc(100% - (${p}px * 2))`)
   const contentScale = useTransform(smoothProgress, [0.2, 0.8], [1, 0.82])
   const heightVal = useTransform(smoothProgress, [0.2, 0.8], [85, 80])
   const height = useTransform(heightVal, (v) => `${v}vh`)
@@ -289,23 +289,18 @@ export default function HeroScrollExpansion() {
     }
   })
 
-  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+  useMotionValueEvent(gatedProgress, 'change', (latest) => {
     // 2. "It's about deciding better" trigger: only when not in solution
-    if (latest > 0.02 && latest < 0.62 && !showDeciding && !showSolution) {
+    if (latest > 0.02 && latest < 0.65 && !showDeciding) {
       setShowDeciding(true)
-    } 
+    } else if ((latest < 0.01 || latest >= 0.65) && showDeciding) {
+      setShowDeciding(false)
+    }
 
     // 2. Switch to Solution content
     if (latest > 0.65 && !showSolution) {
       setShowSolution(true)
-    } else if (latest < 0.62 && showSolution) {
-      setShowSolution(false)
-      // When returning from solution to problem, we want a sequential reveal:
-      // First the left side (showProblem is already true), 
-      // then with a delay, the right side.
-      setShowDeciding(false)
-      setTimeout(() => setShowDeciding(true), 600)
-    }
+    } else if (latest < 0.62 && showSolution) setShowSolution(false)
   })
 
   const windowWidth = useWindowWidth()

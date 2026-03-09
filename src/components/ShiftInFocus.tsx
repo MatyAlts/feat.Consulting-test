@@ -7,6 +7,7 @@ import {
   useMotionValueEvent,
   AnimatePresence,
 } from 'framer-motion'
+import { useScrollGateProgress } from '../hooks/useScrollGateProgress'
 
 // Same gradients as Desktop
 const PURPLE_GRADIENT =
@@ -181,20 +182,19 @@ function SolutionView() {
 
 export default function ShiftInFocus() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const decidingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [showProblem, setShowProblem] = useState(false)
   const [showDeciding, setShowDeciding] = useState(false)
   const [showSolution, setShowSolution] = useState(false)
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
+  const gatedProgress = useScrollGateProgress({
+    containerRef,
+    sensitivity: 0.00135,
   })
 
   // Global scroll for triggers that start at the very top (Hero)
   const { scrollY } = useScroll()
 
-  const smoothProgress = useSpring(scrollYProgress, {
+  const smoothProgress = useSpring(gatedProgress, {
     stiffness: 40,
     damping: 25,
     restDelta: 0.001,
@@ -216,45 +216,27 @@ export default function ShiftInFocus() {
     if (latest > 80 && !showProblem) {
       setShowProblem(true)
     } else if (latest < 20 && (showProblem || showDeciding)) {
-      if (decidingTimerRef.current) { clearTimeout(decidingTimerRef.current); decidingTimerRef.current = null }
       setShowProblem(false)
       setShowDeciding(false)
     }
   })
 
   // 2. Inner transitions based on container progress
-  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
-    if (latest > 0.01 && !showDeciding && !showSolution) setShowDeciding(true)
-    else if (latest < 0.005 && showDeciding && !showSolution) setShowDeciding(false)
+  useMotionValueEvent(gatedProgress, 'change', (latest) => {
+    if (latest > 0.01 && latest < 0.60 && !showDeciding) setShowDeciding(true)
+    else if ((latest < 0.005 || latest >= 0.60) && showDeciding) setShowDeciding(false)
 
     if (latest > 0.60 && !showSolution) setShowSolution(true)
-    else if (latest < 0.56 && showSolution) {
-      setShowSolution(false)
-      setShowDeciding(false)
-      // Only re-show 'deciding' after delay if still in the section (not back at hero)
-      decidingTimerRef.current = setTimeout(() => {
-        decidingTimerRef.current = null
-        setShowDeciding(true)
-      }, 600)
-    }
+    else if (latest < 0.56 && showSolution) setShowSolution(false)
   })
 
   return (
-    // Tall container with scroll-snap so the user pauses at each animation phase
+    // Tall container to keep the sticky storytelling section in view while progress is consumed
     <div
       ref={containerRef}
       className="relative w-full"
-      style={{ height: '280vh', scrollSnapType: 'y proximity' }}
+      style={{ height: '280vh' }}
     >
-      {/* Snap point 1 — entry (problem heading appears) */}
-      <div style={{ scrollSnapAlign: 'start', height: '1px', position: 'absolute', top: '1%' }} />
-
-      {/* Snap point 2 — "deciding better" (15% through) */}
-      <div style={{ scrollSnapAlign: 'start', height: '1px', position: 'absolute', top: '15%' }} />
-
-      {/* Snap point 3 — solution view (60% through) */}
-      <div style={{ scrollSnapAlign: 'start', height: '1px', position: 'absolute', top: '60%' }} />
-
       {/* Background layer — transitions from transparent to cream */}
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
