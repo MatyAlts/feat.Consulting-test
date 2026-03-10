@@ -291,18 +291,19 @@ export default function HeroScrollExpansion() {
   });
 
   // ── Delayed Shrink Animation ──────────────────────────────────────────
-  // Now starts at 0.2 to allow first text to animate in while rect is "full"
+  // Now completes at 0.6 early to allow a long "held" state at the end
   const horizontalPadding = useTransform(
     smoothProgress,
-    [0.2, 0.85],
+    [0.2, 0.6],
     [81.5, 168],
+    { clamp: true },
   );
   const width = useTransform(
     horizontalPadding,
     (p) => `calc(100% - (${p}px * 2))`,
   );
-  const contentScale = useTransform(smoothProgress, [0.2, 0.85], [1, 0.82]);
-  const heightVal = useTransform(smoothProgress, [0.2, 0.85], [85, 80]);
+  const contentScale = useTransform(smoothProgress, [0.2, 0.6], [1, 0.82]);
+  const heightVal = useTransform(smoothProgress, [0.2, 0.6], [85, 80]);
   const height = useTransform(heightVal, (v) => `${v}vh`);
 
   const borderRadius = 40;
@@ -324,12 +325,12 @@ export default function HeroScrollExpansion() {
   });
 
   // 2. Inner transitions (Interactive Progress Only)
-  // Thresholds moved further down to extend 'deciding better' phase
+  // Solution now triggers at 0.6, leaving 40% of the scroll held
   useMotionValueEvent(gatedProgress, "change", (v) => {
-    const isDeciding = v > 0.05 && v < 0.9;
+    const isDeciding = v > 0.05 && v < 0.65;
     if (isDeciding !== showDeciding) setShowDeciding(isDeciding);
 
-    const isSolution = v >= 0.85;
+    const isSolution = v >= 0.6;
     if (isSolution !== showSolution) setShowSolution(isSolution);
   });
 
@@ -340,7 +341,7 @@ export default function HeroScrollExpansion() {
     <div
       ref={containerRef}
       className="relative w-full"
-      style={{ height: "600vh" }}
+      style={{ height: "650vh" }}
     >
       {/* Background Layer — Animate color here */}
       <motion.div

@@ -220,7 +220,7 @@ export default function ShiftInFocus() {
 
   const gatedProgress = useScrollGateProgress({
     containerRef,
-    sensitivity: 0.002,
+    sensitivity: 0.001, // Reduced for a more deliberate scroll feel
   });
 
   // Global scroll for triggers that start at the very top (Hero)
@@ -232,21 +232,21 @@ export default function ShiftInFocus() {
     restDelta: 0.001,
   });
 
-  // Card grows from ~88% to ~96% width of screen as user scrolls
-  // Adjusted to end at 0.7 to align with solution flip
-  const cardWidthPct = useTransform(smoothProgress, [0.0, 0.7], [84, 96]);
+  // Card grows from ~84% to ~96% width of screen as user scrolls
+  // Now completes at 0.45 to allow a huge "held" state at the end
+  const cardWidthPct = useTransform(smoothProgress, [0.0, 0.45], [84, 96]);
   const cardWidth = useTransform(cardWidthPct, (v) => `${v}%`);
 
   // Card height grows too (from compact to near full-screen)
-  const cardHeightPx = useTransform(smoothProgress, [0.0, 0.7], [300, 440]);
+  const cardHeightPx = useTransform(smoothProgress, [0.0, 0.45], [300, 440]);
   const cardHeight = useTransform(cardHeightPx, (v) => `${v}px`);
 
   // Border radius shrinks slightly as it fills the screen
-  const cardRadius = useTransform(smoothProgress, [0.0, 0.7], [28, 24]);
+  const cardRadius = useTransform(smoothProgress, [0.0, 0.45], [28, 24]);
 
-  // 1. Initial Problem Reveal & Momentum Fallback (Security Triggers)
+  // 1. Initial Problem Reveal & Momentum Fallback (Security Sync)
   useMotionValueEvent(scrollY, "change", (latest) => {
-    // Reveal problem card early
+    // Basic reveal logic based on absolute page scroll
     if (latest > 80 && !showProblem) {
       setShowProblem(true);
     } else if (latest < 20 && (showProblem || showDeciding)) {
@@ -254,37 +254,27 @@ export default function ShiftInFocus() {
       setShowDeciding(false);
     }
 
-    // FALLBACK: Force states AND animation progress based on physical viewpoint
+    // MOMENTUM FALLBACK: Sync gated progress with physical scroll position
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const progress = -rect.top / (rect.height - window.innerHeight);
       const p = Math.max(0, Math.min(1, progress));
 
-      // NEW: Sync gated progress with physical move if they drift too much
-      // This ensures the rectangle grows even if touch capture failed due to momentum
+      // Force sync if they drift too much (ensures card grows during flings)
       if (Math.abs(gatedProgress.get() - p) > 0.05) {
         gatedProgress.set(p);
       }
-
-      // Ensure 'Problem' state is on if we are in the section
-      if (p > 0.01 && p < 0.75 && !showProblem) setShowProblem(true);
-
-      // Ensure 'Deciding' state is on if we are in the middle zone
-      const physicalDeciding = p > 0.1 && p < 0.75;
-      if (physicalDeciding !== showDeciding) setShowDeciding(physicalDeciding);
-
-      // Ensure 'Solution' triggers late enough to see the sequence
-      const physicalSolution = p > 0.7;
-      if (physicalSolution !== showSolution) setShowSolution(physicalSolution);
     }
   });
 
-  // 2. Inner transitions based on container progress (Interactive Input)
+  // 2. Inner transitions based on container progress (SINGLE SOURCE OF TRUTH)
   useMotionValueEvent(gatedProgress, "change", (v) => {
-    const isDeciding = v > 0.05 && v < 0.75;
+    // Deciding state zone
+    const isDeciding = v > 0.05 && v < 0.5;
     if (isDeciding !== showDeciding) setShowDeciding(isDeciding);
 
-    const isSolution = v >= 0.7;
+    // Solution triggers at 0.45, leaving 55% of the scroll as a 'held' state
+    const isSolution = v >= 0.45;
     if (isSolution !== showSolution) setShowSolution(isSolution);
   });
 
@@ -293,7 +283,7 @@ export default function ShiftInFocus() {
     <div
       ref={containerRef}
       className="relative w-full"
-      style={{ height: "320vh" }}
+      style={{ height: "700vh" }}
     >
       {/* Background layer — transitions from transparent to cream */}
       <motion.div
