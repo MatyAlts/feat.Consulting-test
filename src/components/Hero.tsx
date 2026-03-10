@@ -1,47 +1,51 @@
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
-const INVESTORS = Array.from({ length: 9 }, (_, i) => `/assets_mobile/investors (${i + 1}).png`)
+const INVESTORS = Array.from(
+  { length: 9 },
+  (_, i) => `/assets_mobile/investors (${i + 1}).png`,
+);
 
 export default function Hero() {
   return (
     <section
       className="relative flex flex-col overflow-hidden"
-      style={{ background: '#FFFFFF' }}
+      style={{ background: "#FFFFFF" }}
     >
       {/* Background image container - expanded to fill the space between red lines with zoom */}
-      <div 
-        className="absolute inset-x-0 z-0 overflow-hidden" 
-        style={{ top: '65px', bottom: '0' }}
+      <div
+        className="absolute inset-x-0 z-0 overflow-hidden"
+        style={{ top: "65px", bottom: "0" }}
       >
         <img
           src="/assets_mobile/BG_sin_opacidad.png"
           alt=""
           className="w-full h-full object-cover"
-          style={{ 
+          style={{
             opacity: 1,
             scale: 1.25, // Zoom effect as requested
-            transformOrigin: 'center'
+            transformOrigin: "center",
           }}
           loading="eager"
         />
         {/* White overlay to create the "faded" effect from the reference */}
         <div
           className="absolute inset-0"
-          style={{ 
-            background: 'rgba(255,255,255,0.92)' 
+          style={{
+            background: "rgba(255,255,255,0.92)",
           }}
         />
-        
+
         {/* Bottom Fade Leap to White */}
-        <div 
+        <div
           className="absolute inset-x-0 bottom-0 h-40 pointer-events-none"
-          style={{ background: 'linear-gradient(to top, #FFFFFF 0%, transparent 100%)' }}
+          style={{
+            background: "linear-gradient(to top, #FFFFFF 0%, transparent 100%)",
+          }}
         />
       </div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center w-full px-5 pt-3 pb-10 text-center">
-
         {/* Logo */}
         <motion.img
           src="/assets_mobile/sia hero desktop.png"
@@ -63,10 +67,10 @@ export default function Hero() {
           <span
             className="font-avenir-regular text-xs px-4 py-1.5 rounded-full"
             style={{
-              border: '1px solid #EAB308',
-              color: '#A16207',
-              background: '#FEFCE8',
-              letterSpacing: '0.01em',
+              border: "1px solid #EAB308",
+              color: "#A16207",
+              background: "#FEFCE8",
+              letterSpacing: "0.01em",
             }}
           >
             An Experience-Driven Program
@@ -76,7 +80,7 @@ export default function Hero() {
         {/* Headline */}
         <motion.h1
           className="font-avenir-heavy leading-tight mb-5 text-center"
-          style={{ fontSize: '2.6rem', color: '#1B2A4A', maxWidth: 340 }}
+          style={{ fontSize: "2.6rem", color: "#1B2A4A", maxWidth: 340 }}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.15 }}
@@ -84,10 +88,13 @@ export default function Hero() {
           Learn Investing
           <br />
           {/* "while" — Avenir Medium italic + SVG circle overlay */}
-          <span className="relative inline-block" style={{ isolation: 'isolate' }}>
+          <span
+            className="relative inline-block"
+            style={{ isolation: "isolate" }}
+          >
             <span
               className="font-avenir-medium"
-              style={{ fontStyle: 'italic' }}
+              style={{ fontStyle: "italic" }}
             >
               while
             </span>
@@ -99,12 +106,12 @@ export default function Hero() {
               xmlns="http://www.w3.org/2000/svg"
               className="absolute pointer-events-none select-none"
               style={{
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '130%',
-                maxWidth: 'none',
-                height: 'auto',
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "130%",
+                maxWidth: "none",
+                height: "auto",
               }}
             >
               <motion.path
@@ -114,40 +121,47 @@ export default function Hero() {
                 strokeLinecap="round"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ 
-                  pathLength: { duration: 2.4, ease: [0.4, 0, 0.2, 1], delay: 0.6 },
-                  opacity: { duration: 0.2, delay: 0.6 }
+                transition={{
+                  pathLength: {
+                    duration: 2.4,
+                    ease: [0.4, 0, 0.2, 1],
+                    delay: 0.6,
+                  },
+                  opacity: { duration: 0.2, delay: 0.6 },
                 }}
               />
             </svg>
-          </span>
-          {' '}Investing
+          </span>{" "}
+          Investing
         </motion.h1>
 
         {/* Subtitle */}
         <motion.p
           className="font-avenir-regular text-sm mb-7 text-center"
-          style={{ 
-            color: '#4B5563', 
+          style={{
+            color: "#4B5563",
             maxWidth: 320,
-            lineHeight: '138%',
-            letterSpacing: '-0.01em'
+            lineHeight: "138%",
+            letterSpacing: "-0.01em",
           }}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
         >
-          Step into Angel Investing alongside other investors, working with live startups, and taking positions under real conditions.
+          Step into Angel Investing alongside other investors, working with live
+          startups, and taking positions under real conditions.
         </motion.p>
 
         {/* CTA Button */}
         <motion.a
-          href={import.meta.env.VITE_APPLY_URL || '#'}
+          href={import.meta.env.VITE_APPLY_URL || "#"}
+          target="_blank"
+          rel="noopener noreferrer"
           className="font-avenir-medium text-white flex items-center justify-center rounded-2xl py-4 text-base mb-2 px-6 w-full"
-          style={{ 
-            backgroundColor: '#09092c', 
-            border: '1.5px solid #fbd979',
-            maxWidth: 380 
+          style={{
+            backgroundColor: "#09092c",
+            border: "1.5px solid #fbd979",
+            maxWidth: 380,
           }}
           initial="initial"
           animate="animate"
@@ -156,32 +170,32 @@ export default function Hero() {
           variants={{
             initial: { opacity: 0, scale: 0.96 },
             animate: { opacity: 1, scale: 1 },
-            hover: { 
-              backgroundColor: '#fbd979',
-              color: '#09092c',
+            hover: {
+              backgroundColor: "#fbd979",
+              color: "#09092c",
             },
-            tap: { 
+            tap: {
               scale: 0.97,
-              backgroundColor: '#fbd979',
-              color: '#09092c',
-            }
+              backgroundColor: "#fbd979",
+              color: "#09092c",
+            },
           }}
-          transition={{ 
-            duration: 0.25, 
+          transition={{
+            duration: 0.25,
             ease: "easeInOut",
           }}
-          aria-label="Apply to Join SIA Angel Hub"
+          aria-label="See if SIA is right for you"
         >
-          <span className="mr-2">Apply to Join</span>
-          <motion.img 
-            src="/assets_mobile/flecha.svg" 
-            alt="" 
-            className="w-[8.5px] h-[8.5px]" 
+          <span className="mr-2">See if SIA is right for you</span>
+          <motion.img
+            src="/assets_mobile/flecha.svg"
+            alt=""
+            className="w-[8.5px] h-[8.5px]"
             variants={{
-              initial: { filter: 'brightness(0) invert(1)' },
-              animate: { filter: 'brightness(0) invert(1)' },
-              hover: { filter: 'brightness(0) invert(0)' },
-              tap: { filter: 'brightness(0) invert(0)' }
+              initial: { filter: "brightness(0) invert(1)" },
+              animate: { filter: "brightness(0) invert(1)" },
+              hover: { filter: "brightness(0) invert(0)" },
+              tap: { filter: "brightness(0) invert(0)" },
             }}
           />
         </motion.a>
@@ -189,7 +203,7 @@ export default function Hero() {
         {/* Below CTA */}
         <motion.p
           className="font-avenir-light text-xs text-center mb-8"
-          style={{ color: '#6B7280' }}
+          style={{ color: "#6B7280" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.42 }}
@@ -207,14 +221,23 @@ export default function Hero() {
           {/* Stars */}
           <div className="flex gap-0.5">
             {[...Array(5)].map((_, i) => (
-              <svg key={i} width="18" height="18" viewBox="0 0 24 24" fill="#FBD979">
+              <svg
+                key={i}
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="#FBD979"
+              >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             ))}
           </div>
 
           {/* Label */}
-          <p className="font-avenir-medium text-xs" style={{ color: '#1B2A4A' }}>
+          <p
+            className="font-avenir-medium text-xs"
+            style={{ color: "#1B2A4A" }}
+          >
             1000+ Investors Worldwide
           </p>
 
@@ -244,7 +267,7 @@ export default function Hero() {
                     height: 32,
                     marginLeft: i === 0 ? 0 : -10,
                     zIndex: i,
-                    position: 'relative',
+                    position: "relative",
                   }}
                   whileHover={hoverAnim}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -256,5 +279,5 @@ export default function Hero() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
