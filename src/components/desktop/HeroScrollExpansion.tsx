@@ -291,10 +291,10 @@ export default function HeroScrollExpansion() {
   });
 
   // ── Delayed Shrink Animation ──────────────────────────────────────────
-  // Now completes at 0.6 early to allow a long "held" state at the end
+  // Ends at 0.9 to maximize reading time while minimizing exit "heaviness"
   const horizontalPadding = useTransform(
     smoothProgress,
-    [0.2, 0.6],
+    [0.2, 0.9],
     [81.5, 168],
     { clamp: true },
   );
@@ -302,8 +302,8 @@ export default function HeroScrollExpansion() {
     horizontalPadding,
     (p) => `calc(100% - (${p}px * 2))`,
   );
-  const contentScale = useTransform(smoothProgress, [0.2, 0.6], [1, 0.82]);
-  const heightVal = useTransform(smoothProgress, [0.2, 0.6], [85, 80]);
+  const contentScale = useTransform(smoothProgress, [0.2, 0.9], [1, 0.82]);
+  const heightVal = useTransform(smoothProgress, [0.2, 0.9], [85, 80]);
   const height = useTransform(heightVal, (v) => `${v}vh`);
 
   const borderRadius = 40;
@@ -324,13 +324,12 @@ export default function HeroScrollExpansion() {
     }
   });
 
-  // 2. Inner transitions (Interactive Progress Only)
-  // Solution now triggers at 0.6, leaving 40% of the scroll held
+  // Solution triggers at 0.9, leaving only 10% of the track for held state (lighter exit)
   useMotionValueEvent(gatedProgress, "change", (v) => {
-    const isDeciding = v > 0.05 && v < 0.65;
+    const isDeciding = v > 0.05 && v < 0.95;
     if (isDeciding !== showDeciding) setShowDeciding(isDeciding);
 
-    const isSolution = v >= 0.6;
+    const isSolution = v >= 0.9;
     if (isSolution !== showSolution) setShowSolution(isSolution);
   });
 
@@ -341,7 +340,7 @@ export default function HeroScrollExpansion() {
     <div
       ref={containerRef}
       className="relative w-full"
-      style={{ height: "650vh" }}
+      style={{ height: "550vh" }}
     >
       {/* Background Layer — Animate color here */}
       <motion.div
