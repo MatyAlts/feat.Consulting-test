@@ -17,13 +17,14 @@ const PROGRESS_EPSILON = 0.001
 export function useScrollGateProgress({
   containerRef,
   sensitivity = 0.002,
-  edgeHoldMs = 150,
-  maxEdgeHoldMs = 1000,
+  edgeHoldMs = 300,
+  maxEdgeHoldMs = 1500,
 }: GateOptions): MotionValue<number> {
   const progress = useMotionValue(0)
   const progressRef = useRef(0)
   const touchYRef = useRef<number | null>(null)
-  const phaseRef = useRef<'idle' | 'active' | 'owning-outward-burst'>('idle')
+  const phaseRef = useRef<'idle' | 'active' | 'owning-outward-burst' | 'dampening-exit'>('idle')
+  const dampeningStartedAtRef = useRef(0)
   const ownershipStartedAtRef = useRef(0)
   const lastOutwardInputAtRef = useRef(0)
   const releaseTimerRef = useRef<number | null>(null)
@@ -112,6 +113,17 @@ export function useScrollGateProgress({
       window.removeEventListener('touchmove', onTouchMove, { capture: true })
     }
 
+    const startDampenedExit = () => {
+      phaseRef.current = 'dampening-exit'
+      dampeningStartedAtRef.current = performance.now()
+      // We keep window capture enabled for a brief period to apply friction
+      window.setTimeout(() => {
+        if (phaseRef.current === 'dampening-exit') {
+          releaseOutwardOwnership()
+        }
+      }, 1200) // Increased to 1200ms to absorb high momentum
+    }
+
     const releaseOutwardOwnership = () => {
       clearReleaseTimer()
       ownershipStartedAtRef.current = 0
@@ -157,6 +169,15 @@ export function useScrollGateProgress({
       const atBottom = progressRef.current >= 1 - PROGRESS_EPSILON
       const atTop = progressRef.current <= PROGRESS_EPSILON
 
+      if (phaseRef.current === 'dampening-exit') {
+        // Reverse cancels friction exit
+        if (deltaY < 0) {
+          releaseOutwardOwnership()
+          return true
+        }
+        return true // Still consume to apply our custom friction
+      }
+
       if (phaseRef.current === 'owning-outward-burst') {
         // Reverse input immediately cancels outward ownership and rewinds naturally.
         if (deltaY < 0) {
@@ -167,8 +188,8 @@ export function useScrollGateProgress({
         if (deltaY > 0) {
           const ownedFor = performance.now() - ownershipStartedAtRef.current
           if (ownedFor > maxEdgeHoldMs) {
-            releaseOutwardOwnership()
-            return inActiveWindow && !atBottom
+            startDampenedExit()
+            return true
           }
 
           // Core ownership guarantee: while forward reveal isn't complete, keep consuming.
@@ -184,8 +205,8 @@ export function useScrollGateProgress({
             return true
           }
 
-          releaseOutwardOwnership()
-          return false
+          startDampenedExit()
+          return true
         }
 
         return false
@@ -203,6 +224,11 @@ export function useScrollGateProgress({
     }
 
     const consume = (deltaY: number) => {
+      if (phaseRef.current === 'dampening-exit') {
+        // Apply 75% friction to the physical scroll (only moves 25% of delta)
+        window.scrollBy(0, deltaY * 0.25)
+        return
+      }
       advanceProgress(deltaY)
     }
 
