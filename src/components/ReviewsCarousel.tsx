@@ -1,145 +1,154 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import type { PanInfo } from 'framer-motion'
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import type { PanInfo } from "framer-motion";
 
 const REVIEWS = [
   {
-    quote: '\u201cFrom asking better questions to making my first investment.\u201d',
+    quote:
+      "\u201cFrom asking better questions to making my first investment.\u201d",
     body: "This program gave me confidence to make my first investment. Learning how to ask the right questions and where to focus during due diligence was invaluable. I now feel ready to make additional angel investments soon.",
-    name: 'Aneta Eprikyan',
-    role: 'CFO at Telecom Company',
-    location: 'Armenia',
-    avatar: '/assets_mobile/Aneta Eprikyan.png',
+    name: "Aneta Eprikyan",
+    role: "CFO at Telecom Company",
+    location: "Armenia",
+    avatar: "/assets_mobile/Aneta Eprikyan.png",
   },
   {
-    quote: '\u201cAngel investing finally felt accessible.\u201d',
-    body: 'The program is amazing for anyone new to angel investing. It helped me understand how different investors approach startups, the full due diligence process, and how to structure evaluations. While overwhelming at first, participating has made angel investing feel accessible to me.',
-    name: 'Assumpta Munsi',
-    role: 'Founder, Communication Coach | Opera Singer',
-    location: 'Germany, based in Barcelona',
-    avatar: '/assets_mobile/Assumpta Munsi.png',
+    quote: "\u201cAngel investing finally felt accessible.\u201d",
+    body: "The program is amazing for anyone new to angel investing. It helped me understand how different investors approach startups, the full due diligence process, and how to structure evaluations. While overwhelming at first, participating has made angel investing feel accessible to me.",
+    name: "Assumpta Munsi",
+    role: "Founder, Communication Coach | Opera Singer",
+    location: "Germany, based in Barcelona",
+    avatar: "/assets_mobile/Assumpta Munsi.png",
   },
   {
-    quote: '\u201cIt clarified what actually matters in an investment decision.\u201d',
-    body: 'The program confirmed some of my investment hypotheses and taught me the importance of separating deal terms from company evaluation. I now see angel investing as accessible and am planning to make additional investments soon.',
-    name: 'AnnaMaria White',
-    role: 'Founder and Strategic Communications Executive | Ex-Amazon',
-    location: 'USA, based in Barcelona',
-    avatar: '/assets_mobile/AnnaMaria White.png',
+    quote:
+      "\u201cIt clarified what actually matters in an investment decision.\u201d",
+    body: "The program confirmed some of my investment hypotheses and taught me the importance of separating deal terms from company evaluation. I now see angel investing as accessible and am planning to make additional investments soon.",
+    name: "AnnaMaria White",
+    role: "Founder and Strategic Communications Executive | Ex-Amazon",
+    location: "USA, based in Barcelona",
+    avatar: "/assets_mobile/AnnaMaria White.png",
   },
-]
+];
 
-const CARD_GAP = 12
-const CARD_PEEK = 40   // how much of the next card is visible
-const CARD_LEFT_PAD = 16
+const CARD_GAP = 12;
+const CARD_PEEK = 40; // how much of the next card is visible
+const CARD_LEFT_PAD = 16;
 
 export default function ReviewsCarousel() {
-  const [current, setCurrent] = useState(0)
-  const [expanded, setExpanded] = useState<number | null>(null)
-  const [cardWidth, setCardWidth] = useState(300)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const [current, setCurrent] = useState(0);
+  const [cardWidth, setCardWidth] = useState(300);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
 
   useEffect(() => {
     const measure = () => {
       if (containerRef.current) {
-        setCardWidth(containerRef.current.offsetWidth - CARD_LEFT_PAD - CARD_PEEK)
+        setCardWidth(
+          containerRef.current.offsetWidth - CARD_LEFT_PAD - CARD_PEEK,
+        );
       }
-    }
-    measure()
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  }, [])
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
-  // Auto-slide every 4 seconds, paused if a card is expanded
   useEffect(() => {
-    if (!inView || expanded !== null) return
+    if (!inView) return;
 
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % REVIEWS.length)
-    }, 4000)
+      setCurrent((prev) => (prev + 1) % REVIEWS.length);
+    }, 4000);
 
-    return () => clearInterval(timer)
-  }, [inView, current, expanded])
-
-  // Close expanded card when moving to a different slide
-  useEffect(() => {
-    requestAnimationFrame(() => setExpanded(null))
-  }, [current])
+    return () => clearInterval(timer);
+  }, [inView, current]);
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     if (info.offset.x < -50) {
-      setCurrent((c) => (c + 1) % REVIEWS.length)
+      setCurrent((c) => (c + 1) % REVIEWS.length);
     } else if (info.offset.x > 50) {
-      setCurrent((c) => (c - 1 + REVIEWS.length) % REVIEWS.length)
+      setCurrent((c) => (c - 1 + REVIEWS.length) % REVIEWS.length);
     }
-  }
+  };
 
   return (
     <section
       ref={ref}
       className="pt-0 pb-4"
-      style={{ background: 'linear-gradient(to bottom, #EEE9DE 0%, #EEE9DE 50%, #f4f7ec 100%)' }}
+      style={{
+        background:
+          "linear-gradient(to bottom, #EEE9DE 0%, #EEE9DE 50%, #f4f7ec 100%)",
+      }}
     >
       {/* Carousel track */}
       <motion.div
         ref={containerRef}
-        style={{ overflow: 'hidden' }}
+        style={{ overflow: "hidden" }}
         initial={{ opacity: 0, y: 12 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5 }}
       >
         <motion.div
-          className="flex"
+          className="flex items-center"
           style={{ paddingLeft: CARD_LEFT_PAD }}
-          animate={{ 
-            x: -(current * (cardWidth + CARD_GAP)) + (current / (REVIEWS.length - 1)) * (CARD_PEEK - CARD_LEFT_PAD)
+          animate={{
+            x:
+              -(current * (cardWidth + CARD_GAP)) +
+              (current / (REVIEWS.length - 1)) * (CARD_PEEK - CARD_LEFT_PAD),
           }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
           drag="x"
           dragConstraints={{
-            left: -((REVIEWS.length - 1) * (cardWidth + CARD_GAP)) + (CARD_PEEK - CARD_LEFT_PAD),
+            left:
+              -((REVIEWS.length - 1) * (cardWidth + CARD_GAP)) +
+              (CARD_PEEK - CARD_LEFT_PAD),
             right: 0,
           }}
           onDragEnd={handleDragEnd}
         >
           {REVIEWS.map((review, i) => {
-            const isExpanded = expanded === i
             return (
               <div
                 key={i}
-                style={{ width: cardWidth, flexShrink: 0, marginRight: CARD_GAP }}
+                style={{
+                  width: cardWidth,
+                  flexShrink: 0,
+                  marginRight: CARD_GAP,
+                }}
               >
                 <div
-                  className="rounded-2xl bg-white p-4 cursor-pointer select-none"
-                  style={{ border: '1px solid #E5E7EB' }}
-                  onClick={() => setExpanded(isExpanded ? null : i)}
+                  className="rounded-2xl bg-white p-4 select-none"
+                  style={{ border: "1px solid #E5E7EB" }}
                 >
                   {/* Quote */}
                   <p
-                    className="font-avenir-heavy italic leading-[1.2] mb-1"
-                    style={{ color: '#0B2232', fontSize: '17px', letterSpacing: '-0.04em' }}
+                    className="font-avenir-heavy leading-[1.2] mb-1"
+                    style={{
+                      color: "#0B2232",
+                      fontSize: "19px",
+                      letterSpacing: "-0.04em",
+                    }}
                   >
                     {review.quote}
                   </p>
 
-                  {/* Body — Animated expansion */}
-                  <motion.div
-                    className="overflow-hidden"
-                    initial={false}
-                    animate={{ height: isExpanded ? 'auto' : 40 }}
-                    transition={{ duration: 0.35, ease: 'easeInOut' }}
-                  >
+                  {/* Body — Always displayed */}
+                  <div className="overflow-hidden">
                     <p
                       className="font-avenir-regular leading-[1.4] mb-4"
-                      style={{ color: '#4B5563', fontSize: '15px', letterSpacing: '-0.03em' }}
+                      style={{
+                        color: "#4B5563",
+                        fontSize: "15px",
+                        letterSpacing: "-0.03em",
+                      }}
                     >
                       {review.body}
                     </p>
-                  </motion.div>
+                  </div>
 
-                  {/* Footer: avatar + name/role + chevron */}
+                  {/* Footer: avatar + name/role */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <img
@@ -150,38 +159,28 @@ export default function ReviewsCarousel() {
                         loading="lazy"
                       />
                       <div className="pt-1.5 flex flex-col">
-                        <p className="font-avenir-medium text-[13.5px] leading-[1.1]" style={{ color: '#1B2A4A', letterSpacing: '-0.02em', marginBottom: '-1px' }}>
+                        <p
+                          className="font-avenir-medium text-[13.5px] leading-[1.1]"
+                          style={{
+                            color: "#1B2A4A",
+                            letterSpacing: "-0.02em",
+                            marginBottom: "-1px",
+                          }}
+                        >
                           — {review.name}
                         </p>
-                        <p className="font-avenir-medium text-[13.5px] leading-[1.1]" style={{ color: '#6B7280', letterSpacing: '-0.01em' }}>
+                        <p
+                          className="font-avenir-medium text-[13.5px] leading-[1.1]"
+                          style={{ color: "#6B7280", letterSpacing: "-0.01em" }}
+                        >
                           {review.location}
                         </p>
                       </div>
                     </div>
-
-                    {/* Chevron expand button - now just visual decoration */}
-                    <div
-                      className="shrink-0 flex items-center justify-center text-[#9CA3AF] p-1"
-                    >
-                      <motion.svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.25 }}
-                      >
-                        <polyline points="6 9 12 15 18 9" />
-                      </motion.svg>
-                    </div>
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </motion.div>
       </motion.div>
@@ -196,13 +195,13 @@ export default function ReviewsCarousel() {
             style={{
               width: 8,
               height: 8,
-              background: i === current ? '#FBD979' : '#D1D5DB',
-              border: `1px solid ${i === current ? '#FBD979' : '#D1D5DB'}`,
+              background: i === current ? "#FBD979" : "#D1D5DB",
+              border: `1px solid ${i === current ? "#FBD979" : "#D1D5DB"}`,
             }}
             aria-label={`Go to review ${i + 1}`}
           />
         ))}
       </div>
     </section>
-  )
+  );
 }

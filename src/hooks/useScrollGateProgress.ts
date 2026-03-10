@@ -9,16 +9,16 @@ type GateOptions = {
 }
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value))
-// Bound single-event input so one aggressive fling cannot finish the reveal in one step.
-const clampDelta = (value: number) => Math.max(-40, Math.min(40, value))
+// Bound single-event input but allow enough for flings to complete progress.
+const clampDelta = (value: number) => Math.max(-250, Math.min(250, value))
 const ACTIVE_EPSILON_PX = 2
 const PROGRESS_EPSILON = 0.001
 
 export function useScrollGateProgress({
   containerRef,
-  sensitivity = 0.0012,
-  edgeHoldMs = 90,
-  maxEdgeHoldMs = 700,
+  sensitivity = 0.002,
+  edgeHoldMs = 150,
+  maxEdgeHoldMs = 1000,
 }: GateOptions): MotionValue<number> {
   const progress = useMotionValue(0)
   const progressRef = useRef(0)
