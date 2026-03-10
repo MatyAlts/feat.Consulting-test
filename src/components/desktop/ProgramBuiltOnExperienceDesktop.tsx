@@ -5,7 +5,6 @@ import {
   useMotionValue,
   useTransform,
   animate,
-  AnimatePresence,
 } from "framer-motion";
 
 const REVIEWS = [
@@ -297,9 +296,6 @@ export default function ProgramBuiltOnExperienceDesktop() {
 function BackedByPeopleSlider({ inView }: { inView: boolean }) {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [expandedReviewIndex, setExpandedReviewIndex] = useState<number | null>(
-    null,
-  );
 
   const titleRef = useRef(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-50px" });
@@ -307,15 +303,12 @@ function BackedByPeopleSlider({ inView }: { inView: boolean }) {
   const n = REVIEWS.length;
   const next = () => {
     setCurrent((c) => (c + 1) % n);
-    setExpandedReviewIndex(null);
   };
   const prev = () => {
     setCurrent((c) => (c - 1 + n) % n);
-    setExpandedReviewIndex(null);
   };
   const goTo = (i: number) => {
     setCurrent(i);
-    setExpandedReviewIndex(null);
   };
 
   useEffect(() => {
