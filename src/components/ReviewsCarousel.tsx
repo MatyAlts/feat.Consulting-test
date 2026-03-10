@@ -13,12 +13,29 @@ const REVIEWS = [
     avatar: "/assets_mobile/Aneta Eprikyan.png",
   },
   {
+    quote:
+      "\u201cIt didn\u2019t just teach me investing. It changed how I decide.\u201d",
+    body: "What an amazing program! I joined it 'knowing' what the discussions would be about. And I was surprised not only by the conversations' content but about what I learned about investing and my investment thesis. My favorite question was asked in Session 16, by a fellow participant: 'As investors, do you want to be seen as the investor that invested in X, or the investor that invested in Y?' This question helped solidify my choice.",
+    name: "Joel Cohen",
+    role: "Principal Product Manager - F5",
+    location: "UK",
+    avatar: "/assets_mobile/Joel_Cohen.png",
+  },
+  {
     quote: "\u201cAngel investing finally felt accessible.\u201d",
     body: "The program is amazing for anyone new to angel investing. It helped me understand how different investors approach startups, the full due diligence process, and how to structure evaluations. While overwhelming at first, participating has made angel investing feel accessible to me.",
     name: "Assumpta Munsi",
     role: "Founder, Communication Coach | Opera Singer",
     location: "Germany, based in Barcelona",
     avatar: "/assets_mobile/Assumpta Munsi.png",
+  },
+  {
+    quote: "\u201cDeep learning comes from real-life context.\u201d",
+    body: "There is no better way of learning what you read in textbooks and watch in videos about valuations, security types, economic terms, investors rights, and so forth, than to put it into practice in real life conversations with founders. At every cohort, we are able to evaluate 60+ of companies, examine their team culture, understand their market opportunity, and ultimately assess why they are uniquely positioned to generate value. As I continue my journey as startup investor, I feel more equipped to evaluate companies at an early stage with a deep understanding of what it takes to support them in their journey to success.",
+    name: "Matteo Costa",
+    role: "Vice President, Marketing Development & Operations - Penguin Random House",
+    location: "USA",
+    avatar: "/assets_mobile/Matteo_Costa.png",
   },
   {
     quote:
@@ -28,6 +45,15 @@ const REVIEWS = [
     role: "Founder and Strategic Communications Executive | Ex-Amazon",
     location: "USA, based in Barcelona",
     avatar: "/assets_mobile/AnnaMaria White.png",
+  },
+  {
+    quote:
+      "\u201cA safe space for you to broaden your knowledge in industries.\u201d",
+    body: "One exciting thing about the program is that it creates a safe space for you to broaden your knowledge in industries. You can be an expert in a particular sector and never venture outside it. This program is excellent at providing you with a network of other investors with additional expertise you can tap into and many companies from different backgrounds and locations. This is an excellent way of learning the ropes of angel investing with like-minded people.",
+    name: "Joao Paulo Diogo",
+    role: "Fund Leader - COREangels Lisbon",
+    location: "Portugal",
+    avatar: "/assets_mobile/Joao_Paulo_Diego.png",
   },
 ];
 
