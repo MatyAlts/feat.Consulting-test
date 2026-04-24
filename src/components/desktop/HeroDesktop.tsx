@@ -1,8 +1,10 @@
-import { motion } from 'framer-motion'
-import HeroScrollExpansion from './HeroScrollExpansion'
+import { motion } from "framer-motion";
+import HeroScrollExpansion from "./HeroScrollExpansion";
 
-const INVESTORS = Array.from({ length: 9 }, (_, i) => `/assets_mobile/investors (${i + 1}).png`)
-
+const INVESTORS = Array.from(
+  { length: 9 },
+  (_, i) => `/assets_mobile/investors (${i + 1}).png`,
+);
 
 export default function HeroDesktop() {
   return (
@@ -26,34 +28,34 @@ export default function HeroDesktop() {
         <div className="absolute inset-0 bg-white" style={{ zIndex: 9 }} />
 
         {/* Background image - expanded and zoomed with bottom fade */}
-        <div 
-          className="absolute inset-0 z-10 overflow-hidden" 
-        >
+        <div className="absolute inset-0 z-10 overflow-hidden">
           <img
             src="/assets_mobile/BG_sin_opacidad.png"
             alt=""
             className="w-full h-full object-cover object-center"
-            style={{ 
+            style={{
               scale: 1.25,
-              transformOrigin: 'center'
+              transformOrigin: "center",
             }}
             loading="eager"
           />
           <div
             className="absolute inset-0"
-            style={{ background: 'rgba(255,255,255,0.88)' }}
+            style={{ background: "rgba(255,255,255,0.88)" }}
           />
 
           {/* Bottom Fade Leap to White */}
-          <div 
+          <div
             className="absolute inset-x-0 bottom-0 h-64 pointer-events-none"
-            style={{ background: 'linear-gradient(to top, #FFFFFF 0%, transparent 100%)' }}
+            style={{
+              background:
+                "linear-gradient(to top, #FFFFFF 0%, transparent 100%)",
+            }}
           />
         </div>
 
         {/* Content */}
         <div className="relative z-20 flex flex-col items-center w-full text-center mx-auto px-6 pt-14 md:pt-16 lg:pt-20 max-w-3xl lg:max-w-4xl">
-
           {/* Pill badge */}
           <motion.div
             className="mb-5 md:mb-6"
@@ -64,10 +66,10 @@ export default function HeroDesktop() {
             <span
               className="font-avenir-regular px-5 py-2 rounded-full text-sm md:text-sm"
               style={{
-                border: '1px solid #EAB308',
-                color: '#A16207',
-                background: '#FEFCE8',
-                letterSpacing: '0.01em',
+                border: "1px solid #EAB308",
+                color: "#A16207",
+                background: "#FEFCE8",
+                letterSpacing: "0.01em",
               }}
             >
               An Experience-Driven Program
@@ -80,8 +82,8 @@ export default function HeroDesktop() {
             <motion.h1
               className="font-avenir-heavy leading-tight mb-5 md:mb-6"
               style={{
-                fontSize: '82.86px',
-                color: '#1B2A4A',
+                fontSize: "82.86px",
+                color: "#1B2A4A",
               }}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -90,8 +92,14 @@ export default function HeroDesktop() {
               Learn Investing
               <br />
               {/* "while" — italic + animated SVG circle */}
-              <span className="relative inline-block" style={{ isolation: 'isolate' }}>
-                <span className="font-avenir-medium" style={{ fontStyle: 'italic' }}>
+              <span
+                className="relative inline-block"
+                style={{ isolation: "isolate" }}
+              >
+                <span
+                  className="font-avenir-medium"
+                  style={{ fontStyle: "italic" }}
+                >
                   while
                 </span>
                 <svg
@@ -100,12 +108,12 @@ export default function HeroDesktop() {
                   xmlns="http://www.w3.org/2000/svg"
                   className="absolute pointer-events-none select-none"
                   style={{
-                    left: '50%',
-                    top: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: '133%',
-                    maxWidth: 'none',
-                    height: 'auto',
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "133%",
+                    maxWidth: "none",
+                    height: "auto",
                   }}
                 >
                   <motion.path
@@ -115,26 +123,30 @@ export default function HeroDesktop() {
                     strokeLinecap="round"
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ 
-                      pathLength: { duration: 2.4, ease: [0.4, 0, 0.2, 1], delay: 0.6 },
-                      opacity: { duration: 0.2, delay: 0.6 }
+                    transition={{
+                      pathLength: {
+                        duration: 2.4,
+                        ease: [0.4, 0, 0.2, 1],
+                        delay: 0.6,
+                      },
+                      opacity: { duration: 0.2, delay: 0.6 },
                     }}
                   />
                 </svg>
-              </span>
-              {' '}Investing
+              </span>{" "}
+              Investing
             </motion.h1>
 
             {/* Subtitle */}
             <motion.p
               className="font-avenir-regular mb-8 text-center"
               style={{
-                color: '#4B5563',
-                fontSize: '19px',
-                maxWidth: '610px',
-                width: '100%',
-                lineHeight: '138%',
-                letterSpacing: '-0.01em'
+                color: "#4B5563",
+                fontSize: "19px",
+                maxWidth: "610px",
+                width: "100%",
+                lineHeight: "138%",
+                letterSpacing: "-0.01em",
               }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -146,14 +158,16 @@ export default function HeroDesktop() {
 
             {/* CTA Button */}
             <motion.a
-              href={import.meta.env.VITE_APPLY_URL || '#'}
+              href={import.meta.env.VITE_APPLY_URL || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full font-avenir-medium text-white flex items-center justify-center rounded-2xl mb-3"
               style={{
-                backgroundColor: '#09092c',
-                border: '1.5px solid #fbd979',
-                whiteSpace: 'nowrap',
-                fontSize: '20.83px',
-                height: '69px'
+                backgroundColor: "#09092c",
+                border: "1.5px solid #fbd979",
+                whiteSpace: "nowrap",
+                fontSize: "20.83px",
+                height: "69px",
               }}
               initial="initial"
               animate="animate"
@@ -162,10 +176,14 @@ export default function HeroDesktop() {
               variants={{
                 initial: { opacity: 0, scale: 0.96 },
                 animate: { opacity: 1, scale: 1 },
-                hover: { backgroundColor: '#fbd979', color: '#09092c' },
-                tap: { scale: 0.97, backgroundColor: '#fbd979', color: '#09092c' },
+                hover: { backgroundColor: "#fbd979", color: "#09092c" },
+                tap: {
+                  scale: 0.97,
+                  backgroundColor: "#fbd979",
+                  color: "#09092c",
+                },
               }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
               aria-label="Apply to Join SIA Angel Hub"
             >
               <span className="mr-2">Apply to Join</span>
@@ -174,10 +192,10 @@ export default function HeroDesktop() {
                 alt=""
                 className="w-[8.5px] h-[8.5px]"
                 variants={{
-                  initial: { filter: 'brightness(0) invert(1)' },
-                  animate: { filter: 'brightness(0) invert(1)' },
-                  hover: { filter: 'brightness(0) invert(0)' },
-                  tap: { filter: 'brightness(0) invert(0)' },
+                  initial: { filter: "brightness(0) invert(1)" },
+                  animate: { filter: "brightness(0) invert(1)" },
+                  hover: { filter: "brightness(0) invert(0)" },
+                  tap: { filter: "brightness(0) invert(0)" },
                 }}
               />
             </motion.a>
@@ -186,7 +204,7 @@ export default function HeroDesktop() {
           {/* Below CTA */}
           <motion.p
             className="font-avenir-light text-sm text-center mb-10"
-            style={{ color: '#6B7280' }}
+            style={{ color: "#6B7280" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.42 }}
@@ -204,14 +222,23 @@ export default function HeroDesktop() {
             {/* Stars */}
             <div className="flex gap-1">
               {[...Array(5)].map((_, i) => (
-                <svg key={i} width="20" height="20" viewBox="0 0 24 24" fill="#FBD979">
+                <svg
+                  key={i}
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="#FBD979"
+                >
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
               ))}
             </div>
 
             {/* Label */}
-            <p className="font-avenir-medium text-sm" style={{ color: '#1B2A4A' }}>
+            <p
+              className="font-avenir-medium text-sm"
+              style={{ color: "#1B2A4A" }}
+            >
               1000+ Investors Worldwide
             </p>
 
@@ -241,7 +268,7 @@ export default function HeroDesktop() {
                       height: 36,
                       marginLeft: i === 0 ? 0 : -12,
                       zIndex: i,
-                      position: 'relative',
+                      position: "relative",
                     }}
                     whileHover={hoverAnim}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -259,5 +286,5 @@ export default function HeroDesktop() {
         <HeroScrollExpansion />
       </div>
     </>
-  )
+  );
 }
